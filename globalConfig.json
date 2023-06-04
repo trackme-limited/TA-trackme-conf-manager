@@ -1,0 +1,82 @@
+{
+    "pages": {
+        "configuration": {
+            "tabs": [
+                {
+                    "name": "trackme_general",
+                    "entity": [
+                        {
+                            "type": "singleSelect",
+                            "label": "Configuration manager role",
+                            "help": "Defines the configuration manager role for this instance",
+                            "required": true,
+                            "options": {
+                                "disableSearch": true,
+                                "autoCompleteFields": [
+                                    {
+                                        "value": "receiver",
+                                        "label": "Receiver"
+                                    },
+                                    {
+                                        "value": "producer",
+                                        "label": "Producer"
+                                    }
+                                ]
+                            },
+                            "defaultValue": "receiver",
+                            "field": "conf_manager_role"
+                        }
+                    ],
+                    "title": "General configuration"
+                },
+                {
+                    "name": "logging",
+                    "entity": [
+                        {
+                            "type": "singleSelect",
+                            "label": "Log level",
+                            "help": "The logging level applies to all custom commands and the TrackMe REST API, logs are indexed automatically within the _internal index",
+                            "options": {
+                                "disableSearch": true,
+                                "autoCompleteFields": [
+                                    {
+                                        "value": "DEBUG",
+                                        "label": "DEBUG"
+                                    },
+                                    {
+                                        "value": "INFO",
+                                        "label": "INFO"
+                                    },
+                                    {
+                                        "value": "WARNING",
+                                        "label": "WARNING"
+                                    },
+                                    {
+                                        "value": "ERROR",
+                                        "label": "ERROR"
+                                    },
+                                    {
+                                        "value": "CRITICAL",
+                                        "label": "CRITICAL"
+                                    }
+                                ]
+                            },
+                            "defaultValue": "INFO",
+                            "field": "loglevel"
+                        }
+                    ],
+                    "title": "Logging"
+                }
+            ],
+            "title": "Configuration",
+            "description": "Configure TrackMe configuration manager"
+        }
+    },
+    "meta": {
+        "name": "TA-trackme-conf-manager",
+        "restRoot": "ta_trackme_conf_manager",
+        "version": "1.0.0",
+        "displayName": "TrackMe Configuration Manager",
+        "schemaVersion": "0.0.3"
+    }
+}

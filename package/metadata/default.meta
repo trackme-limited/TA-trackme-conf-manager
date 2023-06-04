@@ -1,0 +1,7 @@
+
+# Application-level permissions
+
+[]
+owner = admin
+access = read : [ admin, trackme_user, trackme_admin ], write : [ admin, trackme_admin ]
+export = system
