@@ -208,7 +208,7 @@ class TrackMeConfManager_v1(trackme_rest_handler.RESTHandler):
         log.setLevel(logging.getLevelName(loglevel))
 
         # config
-        reqinfo = trackme_reqinfo(request_info.system_authtoken, request_info.server_rest_port)
+        reqinfo = trackme_reqinfo(request_info.system_authtoken, request_info.server_rest_uri)
         conf_manager_role = reqinfo['trackme_general']['conf_manager_role']
 
         # start
