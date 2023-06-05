@@ -71,10 +71,11 @@ class TrackMeConfManager(GeneratingCommand):
 
         # Get request info and set logging level
         reqinfo = trackme_reqinfo(self._metadata.searchinfo.session_key, self._metadata.searchinfo.splunkd_uri)
+        logging.debug(f"reqinfo={json.dumps(reqinfo, indent=2)}")
         log.setLevel(logging.getLevelName(reqinfo['logging_level']))
 
         # Get config
-        conf_manager_role = reqinfo['trackme_general']['conf_manager_role']
+        conf_manager_role = reqinfo['trackme_conf']['trackme_general']['conf_manager_role']
 
         # Data collection
         collection_name = "kv_trackme_conf_manager"
