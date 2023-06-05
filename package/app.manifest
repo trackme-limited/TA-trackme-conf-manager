@@ -1,7 +1,7 @@
 {
   "schemaVersion": "2.0.0",
   "info": {
-    "title": "TrackMe",
+    "title": "TrackMe configuration manager",
     "id": {
       "group": null,
       "name": "TA-trackme-conf-manager",
