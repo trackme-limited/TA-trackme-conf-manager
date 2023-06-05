@@ -84,6 +84,52 @@ jobs:
           echo "Build number is ${{ env.BUILD_NUMBER }}"
 
       #
+      # Ansible
+      #
+
+      - name: Install Ansible
+        # qua branch only
+        if: ${{ !contains(github.event.head_commit.message, '#nodemo') && github.ref == 'refs/heads/qua' }}
+        run: |
+          sudo apt-get install -y ansible
+
+      #
+      # Upload release to the release site
+      #
+
+      - name: Create target directory for on release site
+        # main branch only
+        if: ${{ !contains(github.event.head_commit.message, '#nopublish') && github.ref == 'refs/heads/main' }}
+        uses: appleboy/ssh-action@v0.1.7
+        env:
+          VERSION_NUMBER: ${{ env.VERSION_NUMBER }}
+          BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
+        with:
+          host: ${{ secrets.RELEASE_SITE_HOST }}
+          username: ${{ secrets.RELEASE_SITE_USER }}
+          key: ${{ secrets.RELEASE_SITE_SSH_KEY }}
+          port: ${{ secrets.RELEASE_SITE_SSH_PORT }}
+          envs: VERSION_NUMBER,BUILD_NUMBER
+          script: |
+            mkdir "/var/www/trackme-solutions.com/downloads/TA-trackme-conf-manager/TA-trackme-conf-manager_${VERSION_NUMBER}_${BUILD_NUMBER}"
+
+      - name: Upload to release site
+        # main branch only
+        if: ${{ !contains(github.event.head_commit.message, '#nopublish') && github.ref == 'refs/heads/main' }}
+        uses: appleboy/scp-action@master
+        env:
+          VERSION_NUMBER: ${{ env.VERSION_NUMBER }}
+          BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
+        with:
+          host: ${{ secrets.RELEASE_SITE_HOST }}
+          username: ${{ secrets.RELEASE_SITE_USER }}
+          key: ${{ secrets.RELEASE_SITE_SSH_KEY }}
+          port: ${{ secrets.RELEASE_SITE_SSH_PORT }}
+          source: "output/*.tgz,output/release-sha256.txt,output/report_appinspect*"
+          target: "/var/www/trackme-solutions.com/downloads/TA-trackme-conf-manager/TA-trackme-conf-manager_${{ env.VERSION_NUMBER }}_${{ env.BUILD_NUMBER }}"
+          strip_components: 1
+
+      #
       #
       #
 
