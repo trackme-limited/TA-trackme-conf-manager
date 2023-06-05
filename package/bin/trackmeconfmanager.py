@@ -175,6 +175,7 @@ class TrackMeConfManager(GeneratingCommand):
 
                         if conf_manager_role != 'producer':
                             transaction_info = 'running in receiver mode, no actions will be performed'
+                            transaction_runops = False
                         else:
                             if self.mode == 'simulation' and transaction_runops:
                                 transaction_info = 'This transaction has not been processed yet and will be processed accordingly if submitted in live mode'
