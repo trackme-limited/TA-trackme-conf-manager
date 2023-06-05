@@ -156,10 +156,6 @@ class TrackMeConfManager(GeneratingCommand):
                         # process the transaction if needed
                         transaction_runops = False
 
-                        # only producer mode will perform action
-                        if conf_manager_role != 'producer':
-                            
-
                         if transaction not in collection_keys:
                             logging.info('transaction was not found in the KVstore and will be processed in live mode')
                             transaction_runops = True
@@ -174,16 +170,20 @@ class TrackMeConfManager(GeneratingCommand):
 
                         # set info
                         transaction_info = None
-                        if self.mode == 'simulation' and transaction_runops:
-                            transaction_info = 'This transaction has not been processed yet and will be processed accordingly if submitted in live mode'
+
+                        if conf_manager_role != 'producer':
+                            transaction_info = 'running in receiver mode, no actions will be performed'
                         else:
-                            transaction_info = 'This transaction has been processed already, the Conf Manager will not attempt to process it again'
+                            if self.mode == 'simulation' and transaction_runops:
+                                transaction_info = 'This transaction has not been processed yet and will be processed accordingly if submitted in live mode'
+                            else:
+                                transaction_info = 'This transaction has been processed already, the Conf Manager will not attempt to process it again'
 
                         #
                         # Process transactions
                         #                        
 
-                        if self.mode == 'live' and transaction_runops:
+                        if conf_manager_role == 'receiver' and self.mode == 'live' and transaction_runops:
 
                             url = f'{self._metadata.searchinfo.splunkd_uri}/{transaction_http_service}'
                             header = {
