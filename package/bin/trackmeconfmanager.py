@@ -117,13 +117,14 @@ class TrackMeConfManager(GeneratingCommand):
         # Set the journal file target
         journal_file = None
         journal_filename = 'trackme_conf_manager_transactions_journal.json'
+        default_dir = os.path.join(splunkhome, 'etc', 'apps', 'TA-trackme-conf-manager', 'default')
         local_dir = os.path.join(splunkhome, 'etc', 'apps', 'TA-trackme-conf-manager', 'local')
 
         if os.path.isfile(os.path.join(local_dir, journal_filename)):
             journal_file = os.path.join(local_dir, journal_filename)
             logging.debug(f'using journal found at path=\"{journal_file}\"')
-        elif os.path.isfile(os.path.join('default', journal_filename)):
-            journal_file = os.path.join('default', journal_filename)
+        elif os.path.isfile(os.path.join(default_dir, journal_filename)):
+            journal_file = os.path.join(default_dir, journal_filename)
             logging.debug(f'using journal found at path=\"{journal_file}\"')
         else:
             journal_file = None
