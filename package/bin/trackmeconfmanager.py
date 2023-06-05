@@ -186,7 +186,7 @@ class TrackMeConfManager(GeneratingCommand):
                         # Process transactions
                         #                        
 
-                        if conf_manager_role == 'receiver' and self.mode == 'live' and transaction_runops:
+                        if conf_manager_role == 'producer' and self.mode == 'live' and transaction_runops:
 
                             url = f'{self._metadata.searchinfo.splunkd_uri}/{transaction_http_service}'
                             header = {
