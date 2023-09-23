@@ -75,7 +75,7 @@
     "meta": {
         "name": "TA-trackme-conf-manager",
         "restRoot": "ta_trackme_conf_manager",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "displayName": "TrackMe Configuration Manager",
         "schemaVersion": "0.0.3"
     }
