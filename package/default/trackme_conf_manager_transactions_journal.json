@@ -1,0 +1,1516 @@
+{
+    "c7062749196fa36477cfa356f520ca04": {
+        "transaction_request": {
+            "tenant_name": "secops_eu",
+            "tenant_alias": "01 - SEC feeds EU",
+            "tenant_desc": "Feeds tracking region: Europe",
+            "tenant_roles_admin": "trackme_admin",
+            "tenant_roles_power": "trackme_power",
+            "tenant_roles_user": "trackme_user",
+            "tenant_owner": "admin",
+            "tenant_idx_settings": "global",
+            "tenant_dsm_enabled": "true",
+            "tenant_dsm_sampling_obfuscation": "disabled"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/vtenants/admin/add_tenant",
+        "ctime": 1707217101.149901
+    },
+    "0f24a552321168cdff441800d9fd220a": {
+        "transaction_request": {
+            "tenant_name": "secops_na",
+            "tenant_alias": "02 - SEC feeds NA",
+            "tenant_desc": "Feeds tracking region: North America",
+            "tenant_roles_admin": "trackme_admin",
+            "tenant_roles_power": "trackme_power",
+            "tenant_roles_user": "trackme_user",
+            "tenant_owner": "admin",
+            "tenant_idx_settings": "global",
+            "tenant_dsm_enabled": "true",
+            "tenant_dsm_sampling_obfuscation": "disabled"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/vtenants/admin/add_tenant",
+        "ctime": 1707217131.0740068
+    },
+    "3f3e4603f39bc8edaad65e56b5225270": {
+        "transaction_request": {
+            "tenant_name": "secops_uk",
+            "tenant_alias": "03 - SEC feeds UK",
+            "tenant_desc": "Feeds tracking region: United Kingdom",
+            "tenant_roles_admin": "trackme_admin",
+            "tenant_roles_power": "trackme_power",
+            "tenant_roles_user": "trackme_user",
+            "tenant_owner": "admin",
+            "tenant_idx_settings": "global",
+            "tenant_dsm_enabled": "true",
+            "tenant_dsm_sampling_obfuscation": "disabled"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/vtenants/admin/add_tenant",
+        "ctime": 1707217161.353577
+    },
+    "0fca0cf71000f7c412ccf995944deb5e": {
+        "transaction_request": {
+            "tenant_id": "secops-eu",
+            "component": "dsm",
+            "tracker_name": "dsm:eu",
+            "account": "local",
+            "search_mode": "tstats",
+            "root_constraint": "[ | inputlookup trackme_sites.csv | where site_name=\"eu\" | table root_constraint | return $root_constraint ]",
+            "earliest_time": "-4h",
+            "latest_time": "+4h",
+            "index_earliest_time": "-4h",
+            "index_latest_time": "+4h"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_hybrid_trackers/admin/hybrid_tracker_create",
+        "ctime": 1707217257.905281
+    },
+    "dbd397d5ac3b6396757b01eca56708a8": {
+        "transaction_request": {
+            "tenant_id": "secops-na",
+            "component": "dsm",
+            "tracker_name": "dsm:na",
+            "account": "local",
+            "search_mode": "tstats",
+            "root_constraint": "[ | inputlookup trackme_sites.csv | where site_name=\"na\" | table root_constraint | return $root_constraint ]",
+            "earliest_time": "-4h",
+            "latest_time": "+4h",
+            "index_earliest_time": "-4h",
+            "index_latest_time": "+4h"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_hybrid_trackers/admin/hybrid_tracker_create",
+        "ctime": 1707217268.0880485
+    },
+    "ce5c602e3805872a6fd13a356efa70e4": {
+        "transaction_request": {
+            "tenant_id": "secops-uk",
+            "component": "dsm",
+            "tracker_name": "dsm:uk",
+            "account": "local",
+            "search_mode": "tstats",
+            "root_constraint": "[ | inputlookup trackme_sites.csv | where site_name=\"uk\" | table root_constraint | return $root_constraint ]",
+            "earliest_time": "-4h",
+            "latest_time": "+4h",
+            "index_earliest_time": "-4h",
+            "index_latest_time": "+4h"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_hybrid_trackers/admin/hybrid_tracker_create",
+        "ctime": 1707217277.191619
+    },
+    "3ac4aaaa91bedd976ef12849582c928a": {
+        "transaction_request": {
+            "tenant_id": "secops-eu",
+            "alert_name": "TrackMe alert tenant_id:secops-eu - Alert splk-dsm",
+            "alert_search": "| `get_splk_dsm_table(secops-eu,*)`\n| where monitored_state=\"enabled\"\n| appendcols [ | inputlookup trackme_maintenance_mode ] | filldown maintenance_mode | where NOT maintenance_mode=\"enabled\"\n| search object=\"*\"\n| search priority=\"*\"\n| where (object_state=\"red\" OR object_state=\"orange\") | search object_state=\"red\"\n| `AnyTime`\n| where ack_state!=\"active\"",
+            "alert_properties": {
+                "description": "TrackMe alert",
+                "alert_type": "number of events",
+                "alert.severity": "5",
+                "alert.suppress": "1",
+                "alert.suppress.fields": "object",
+                "alert.suppress.period": "15m",
+                "alert.track": "1",
+                "dispatch.earliest_time": "-5m",
+                "dispatch.latest_time": "now",
+                "is_scheduled": "1",
+                "schedule_window": "auto",
+                "alert_comparator": "greater than",
+                "alert_threshold": "0",
+                "alert.digest_mode": "0",
+                "cron_schedule": "*/5 * * * *",
+                "actions": "trackme_notable,trackme_auto_ack,trackme_smart_status",
+                "action.trackme_notable.title": "$name$",
+                "action.trackme_smart_status.param.tenant_id": "$result.tenant_id$",
+                "action.trackme_auto_ack.param.object_category": "$result.object_category$",
+                "action.trackme_auto_ack.param.object_name": "$result.object$",
+                "action.trackme_auto_ack.param.ack_period": "86400",
+                "action.trackme_auto_ack.param.ack_type": "unsticky",
+                "action.trackme_smart_status.param.object_category": "$result.object_category$",
+                "action.trackme_smart_status.param.object_name": "$result.object$"
+            }
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/alerting/admin/create_alert",
+        "ctime": 1707217436.1153984
+    },
+    "0af4a4e6b845c785eb5d75a28fe11a66": {
+        "transaction_request": {
+            "tenant_id": "secops-na",
+            "alert_name": "TrackMe alert tenant_id:secops-na - Alert splk-dsm",
+            "alert_search": "| `get_splk_dsm_table(secops-na,*)`\n| where monitored_state=\"enabled\"\n| appendcols [ | inputlookup trackme_maintenance_mode ] | filldown maintenance_mode | where NOT maintenance_mode=\"enabled\"\n| search object=\"*\"\n| search priority=\"*\"\n| where (object_state=\"red\" OR object_state=\"orange\") | search object_state=\"red\"\n| `AnyTime`\n| where ack_state!=\"active\"",
+            "alert_properties": {
+                "description": "TrackMe alert",
+                "alert_type": "number of events",
+                "alert.severity": "5",
+                "alert.suppress": "1",
+                "alert.suppress.fields": "object",
+                "alert.suppress.period": "15m",
+                "alert.track": "1",
+                "dispatch.earliest_time": "-5m",
+                "dispatch.latest_time": "now",
+                "is_scheduled": "1",
+                "schedule_window": "auto",
+                "alert_comparator": "greater than",
+                "alert_threshold": "0",
+                "alert.digest_mode": "0",
+                "cron_schedule": "*/5 * * * *",
+                "actions": "trackme_notable,trackme_auto_ack,trackme_smart_status",
+                "action.trackme_notable.title": "$name$",
+                "action.trackme_smart_status.param.tenant_id": "$result.tenant_id$",
+                "action.trackme_auto_ack.param.object_category": "$result.object_category$",
+                "action.trackme_auto_ack.param.object_name": "$result.object$",
+                "action.trackme_auto_ack.param.ack_period": "86400",
+                "action.trackme_auto_ack.param.ack_type": "unsticky",
+                "action.trackme_smart_status.param.object_category": "$result.object_category$",
+                "action.trackme_smart_status.param.object_name": "$result.object$"
+            }
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/alerting/admin/create_alert",
+        "ctime": 1707217459.646102
+    },
+    "d437660241d4aabd0f1bb6e0b62ebf07": {
+        "transaction_request": {
+            "tenant_id": "secops-uk",
+            "alert_name": "TrackMe alert tenant_id:secops-uk - Alert splk-dsm",
+            "alert_search": "| `get_splk_dsm_table(secops-uk,*)`\n| where monitored_state=\"enabled\"\n| appendcols [ | inputlookup trackme_maintenance_mode ] | filldown maintenance_mode | where NOT maintenance_mode=\"enabled\"\n| search object=\"*\"\n| search priority=\"*\"\n| where (object_state=\"red\" OR object_state=\"orange\") | search object_state=\"red\"\n| `AnyTime`\n| where ack_state!=\"active\"",
+            "alert_properties": {
+                "description": "TrackMe alert",
+                "alert_type": "number of events",
+                "alert.severity": "5",
+                "alert.suppress": "1",
+                "alert.suppress.fields": "object",
+                "alert.suppress.period": "15m",
+                "alert.track": "1",
+                "dispatch.earliest_time": "-5m",
+                "dispatch.latest_time": "now",
+                "is_scheduled": "1",
+                "schedule_window": "auto",
+                "alert_comparator": "greater than",
+                "alert_threshold": "0",
+                "alert.digest_mode": "0",
+                "cron_schedule": "*/5 * * * *",
+                "actions": "trackme_notable,trackme_auto_ack,trackme_smart_status",
+                "action.trackme_notable.title": "$name$",
+                "action.trackme_smart_status.param.tenant_id": "$result.tenant_id$",
+                "action.trackme_auto_ack.param.object_category": "$result.object_category$",
+                "action.trackme_auto_ack.param.object_name": "$result.object$",
+                "action.trackme_auto_ack.param.ack_period": "86400",
+                "action.trackme_auto_ack.param.ack_type": "unsticky",
+                "action.trackme_smart_status.param.object_category": "$result.object_category$",
+                "action.trackme_smart_status.param.object_name": "$result.object$"
+            }
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/alerting/admin/create_alert",
+        "ctime": 1707217481.384374
+    },
+    "ec906f3ed51bbccd26a238caa1a90ad2": {
+        "transaction_request": {
+            "tenant_name": "secops-merged-all",
+            "tenant_alias": "04 - SEC merged",
+            "tenant_desc": "Feeds tracking for all regions: index merged tracking",
+            "tenant_roles_admin": "trackme_admin",
+            "tenant_roles_power": "trackme_power",
+            "tenant_roles_user": "trackme_user",
+            "tenant_owner": "admin",
+            "tenant_idx_settings": "global",
+            "tenant_dsm_enabled": "true",
+            "tenant_dsm_sampling_obfuscation": "disabled"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/vtenants/admin/add_tenant",
+        "ctime": 1707217529.1442068
+    },
+    "edf602b3b0b3cea7d5f3061a74678f3c": {
+        "transaction_request": {
+            "tenant_id": "secops-merged-all",
+            "component": "dsm",
+            "tracker_name": "dsm:merged:eu",
+            "account": "local",
+            "search_mode": "tstats",
+            "root_constraint": "[ | inputlookup trackme_sites.csv | where site_name=\"eu\" | table root_constraint | return $root_constraint ]",
+            "breakby_field": "merged",
+            "earliest_time": "-4h",
+            "latest_time": "+4h",
+            "index_earliest_time": "-4h",
+            "index_latest_time": "+4h"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_hybrid_trackers/admin/hybrid_tracker_create",
+        "ctime": 1707217580.4904695
+    },
+    "fd9da6d1b218495c78601939fe8f5ae5": {
+        "transaction_request": {
+            "tenant_id": "secops-merged-all",
+            "component": "dsm",
+            "tracker_name": "dsm:merged:na",
+            "account": "local",
+            "search_mode": "tstats",
+            "root_constraint": "[ | inputlookup trackme_sites.csv | where site_name=\"na\" | table root_constraint | return $root_constraint ]",
+            "breakby_field": "merged",
+            "earliest_time": "-4h",
+            "latest_time": "+4h",
+            "index_earliest_time": "-4h",
+            "index_latest_time": "+4h"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_hybrid_trackers/admin/hybrid_tracker_create",
+        "ctime": 1707217592.9610927
+    },
+    "a4b88e31449d482ec9b0a7abf4b172c3": {
+        "transaction_request": {
+            "tenant_id": "secops-merged-all",
+            "component": "dsm",
+            "tracker_name": "dsm:merged:uk",
+            "account": "local",
+            "search_mode": "tstats",
+            "root_constraint": "[ | inputlookup trackme_sites.csv | where site_name=\"uk\" | table root_constraint | return $root_constraint ]",
+            "breakby_field": "merged",
+            "earliest_time": "-4h",
+            "latest_time": "+4h",
+            "index_earliest_time": "-4h",
+            "index_latest_time": "+4h"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_hybrid_trackers/admin/hybrid_tracker_create",
+        "ctime": 1707217602.938855
+    },
+    "d3aad7ad74047e2a7d0707c33e0f527b": {
+        "transaction_request": {
+            "tenant_id": "secops-merged-all",
+            "alert_name": "TrackMe alert tenant_id:secops-merged-all - Alert splk-dsm",
+            "alert_search": "| `get_splk_dsm_table(secops-merged-all,*)`\n| where monitored_state=\"enabled\"\n| appendcols [ | inputlookup trackme_maintenance_mode ] | filldown maintenance_mode | where NOT maintenance_mode=\"enabled\"\n| search object=\"*\"\n| search priority=\"*\"\n| where (object_state=\"red\" OR object_state=\"orange\") | search object_state=\"red\"\n| `AnyTime`\n| where ack_state!=\"active\"",
+            "alert_properties": {
+                "description": "TrackMe alert",
+                "alert_type": "number of events",
+                "alert.severity": "5",
+                "alert.suppress": "1",
+                "alert.suppress.fields": "object",
+                "alert.suppress.period": "15m",
+                "alert.track": "1",
+                "dispatch.earliest_time": "-5m",
+                "dispatch.latest_time": "now",
+                "is_scheduled": "1",
+                "schedule_window": "auto",
+                "alert_comparator": "greater than",
+                "alert_threshold": "0",
+                "alert.digest_mode": "0",
+                "cron_schedule": "*/5 * * * *",
+                "actions": "trackme_notable,trackme_auto_ack,trackme_smart_status",
+                "action.trackme_notable.title": "$name$",
+                "action.trackme_smart_status.param.tenant_id": "$result.tenant_id$",
+                "action.trackme_auto_ack.param.object_category": "$result.object_category$",
+                "action.trackme_auto_ack.param.object_name": "$result.object$",
+                "action.trackme_auto_ack.param.ack_period": "86400",
+                "action.trackme_auto_ack.param.ack_type": "unsticky",
+                "action.trackme_smart_status.param.object_category": "$result.object_category$",
+                "action.trackme_smart_status.param.object_name": "$result.object$"
+            }
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/alerting/admin/create_alert",
+        "ctime": 1707217638.2878525
+    },
+    "d9e21a8dc328af2b716937f02acc49b0": {
+        "transaction_request": {
+            "tenant_name": "feeds-not-sec",
+            "tenant_alias": "05 - Non SEC feeds",
+            "tenant_desc": "Feeds tracking for non security indexes",
+            "tenant_roles_admin": "trackme_admin",
+            "tenant_roles_power": "trackme_power",
+            "tenant_roles_user": "trackme_user",
+            "tenant_owner": "admin",
+            "tenant_idx_settings": "global",
+            "tenant_dsm_enabled": "true",
+            "tenant_dsm_sampling_obfuscation": "disabled"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/vtenants/admin/add_tenant",
+        "ctime": 1707217685.5268614
+    },
+    "0097e79496517cd25fc3da665e5a5e46": {
+        "transaction_request": {
+            "tenant_id": "feeds-not-sec",
+            "component": "dsm",
+            "tracker_name": "dsm:not-sec",
+            "account": "local",
+            "search_mode": "tstats",
+            "root_constraint": "NOT ( [ | inputlookup trackme_sites.csv | table root_constraint | rename root_constraint as index | stats values(index) as index | eval index =  mvjoin(index, \" OR \") | return $index ] )",
+            "earliest_time": "-4h",
+            "latest_time": "+4h",
+            "index_earliest_time": "-4h",
+            "index_latest_time": "+4h"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_hybrid_trackers/admin/hybrid_tracker_create",
+        "ctime": 1707217738.2479455
+    },
+    "9f91172cac736db9b67203e56688dfa7": {
+        "transaction_request": {
+            "tenant_id": "feeds-not-sec",
+            "alert_name": "TrackMe alert tenant_id:feeds-not-sec - Alert splk-dsm",
+            "alert_search": "| `get_splk_dsm_table(feeds-not-sec,*)`\n| where monitored_state=\"enabled\"\n| appendcols [ | inputlookup trackme_maintenance_mode ] | filldown maintenance_mode | where NOT maintenance_mode=\"enabled\"\n| search object=\"*\"\n| search priority=\"*\"\n| where (object_state=\"red\" OR object_state=\"orange\") | search object_state=\"red\"\n| `AnyTime`\n| where ack_state!=\"active\"",
+            "alert_properties": {
+                "description": "TrackMe alert",
+                "alert_type": "number of events",
+                "alert.severity": "5",
+                "alert.suppress": "1",
+                "alert.suppress.fields": "object",
+                "alert.suppress.period": "15m",
+                "alert.track": "1",
+                "dispatch.earliest_time": "-5m",
+                "dispatch.latest_time": "now",
+                "is_scheduled": "1",
+                "schedule_window": "auto",
+                "alert_comparator": "greater than",
+                "alert_threshold": "0",
+                "alert.digest_mode": "0",
+                "cron_schedule": "*/5 * * * *",
+                "actions": "trackme_notable,trackme_auto_ack,trackme_smart_status",
+                "action.trackme_notable.title": "$name$",
+                "action.trackme_smart_status.param.tenant_id": "$result.tenant_id$",
+                "action.trackme_auto_ack.param.object_category": "$result.object_category$",
+                "action.trackme_auto_ack.param.object_name": "$result.object$",
+                "action.trackme_auto_ack.param.ack_period": "86400",
+                "action.trackme_auto_ack.param.ack_type": "unsticky",
+                "action.trackme_smart_status.param.object_category": "$result.object_category$",
+                "action.trackme_smart_status.param.object_name": "$result.object$"
+            }
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/alerting/admin/create_alert",
+        "ctime": 1707217781.0930994
+    },
+    "6e703dc60b7b561100146db8b5059709": {
+        "transaction_request": {
+            "tenant_alias": "06 - ES SIEM Workload",
+            "tenant_desc": "Tracking of Enterprise Security Workload",
+            "tenant_name": "wlk-es",
+            "tenant_roles_admin": [
+                "trackme_admin"
+            ],
+            "tenant_roles_power": [
+                "trackme_power"
+            ],
+            "tenant_roles_user": [
+                "trackme_user"
+            ],
+            "tenant_owner": "nobody",
+            "tenant_idx_settings": "{\"trackme_summary_idx\": \"trackme_summary\", \"trackme_audit_idx\": \"trackme_audit\", \"trackme_notable_idx\": \"trackme_notable\", \"trackme_metric_idx\": \"trackme_metrics\"}",
+            "tenant_wlk_outliers_metrics": "eval outliers_metrics=\"{'elapsed': {'alert_lower_breached': 0, 'alert_upper_breached': 1, 'time_factor': 'none'}}\"",
+            "tenant_wlk_enabled": true
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/vtenants/admin/add_tenant",
+        "ctime": 1707217842.1333008
+    },
+    "ff84008331197babdf53c2075d0f3344": {
+        "transaction_request": {
+            "tenant_id": "wlk-es",
+            "tracker_type": "main",
+            "account": "local",
+            "environment_type": "splunk_cloud",
+            "overgroup": "app"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_wlk/admin/wlk_tracker_create",
+        "ctime": 1707217869.5437648
+    },
+    "6c940303e1c12ad312836adbd5401895": {
+        "transaction_request": {
+            "tenant_id": "wlk-es",
+            "tracker_type": "metadata",
+            "account": "local",
+            "overgroup": "app"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_wlk/admin/wlk_tracker_create",
+        "ctime": 1707217882.304238
+    },
+    "7a567db67223ec75f0a66a8fbe80c301": {
+        "transaction_request": {
+            "tenant_id": "wlk-es",
+            "tracker_type": "orphan",
+            "account": "local",
+            "overgroup": "app"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_wlk/admin/wlk_tracker_create",
+        "ctime": 1707217895.9228766
+    },
+    "cebc54bf150c197aaefec84670c69c65": {
+        "transaction_request": {
+            "tenant_id": "wlk-es",
+            "tracker_type": "inactive_entities",
+            "account": "local",
+            "inactive_entities_max_age_days": "15",
+            "overgroup": "app"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_wlk/admin/wlk_tracker_create",
+        "ctime": 1707217907.9697955
+    },
+    "fdf352de7f5dc4753810fab7be469959": {
+        "transaction_request": {
+            "tenant_id": "wlk-es",
+            "environment_type": "splunk_cloud",
+            "tracker_type": "introspection",
+            "account": "local",
+            "root_constraint": "(host=* splunk_server=* data.search_props.app=*)",
+            "overgroup": "app"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_wlk/admin/wlk_tracker_create",
+        "ctime": 1707217921.1239998
+    },
+    "6ac5eaad1d39db3046c1ec71ea7bb310": {
+        "transaction_request": {
+            "tenant_id": "wlk-es",
+            "environment_type": "splunk_cloud",
+            "tracker_type": "scheduler",
+            "account": "local",
+            "root_constraint": "(host=* splunk_server=* app=*)",
+            "overgroup": "app"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_wlk/admin/wlk_tracker_create",
+        "ctime": 1707217935.1062558
+    },
+    "44ee09b8c13bbb5b3ba1cd550e37a0c7": {
+        "transaction_request": {
+            "tenant_id": "wlk-es",
+            "environment_type": "splunk_cloud",
+            "tracker_type": "splunkcloud_svc",
+            "account": "local",
+            "root_constraint": "(host=* splunk_server=* search_app=*)",
+            "overgroup": "app"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_wlk/admin/wlk_tracker_create",
+        "ctime": 1707217947.061467
+    },
+    "1540cc68be3a52d0c21a8f7706ffff78": {
+        "transaction_request": {
+            "tenant_id": "wlk-es",
+            "environment_type": "splunk_cloud",
+            "tracker_type": "notable",
+            "account": "local",
+            "overgroup": "app"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_wlk/admin/wlk_tracker_create",
+        "ctime": 1707217959.655091
+    },
+    "7fa60e233d5fa760f5a5133bbf9b50cd": {
+        "transaction_request": {
+            "tenant_id": "wlk-es",
+            "alert_name": "TrackMe alert tenant_id:wlk-es - Alert splk-wlk",
+            "alert_search": "| `get_splk_wlk_table(wlk-es,*,*)`\n| where monitored_state=\"enabled\"\n| appendcols [ | inputlookup trackme_maintenance_mode ] | filldown maintenance_mode | where NOT maintenance_mode=\"enabled\"\n| search object=\"*\"\n| search priority=\"*\"\n| where (object_state=\"red\" OR object_state=\"orange\") | search object_state=\"red\"\n| `AnyTime`\n| where ack_state!=\"active\"",
+            "alert_properties": {
+                "description": "TrackMe alert",
+                "alert_type": "number of events",
+                "alert.severity": "5",
+                "alert.suppress": "1",
+                "alert.suppress.fields": "object",
+                "alert.suppress.period": "15m",
+                "alert.track": "1",
+                "dispatch.earliest_time": "-5m",
+                "dispatch.latest_time": "now",
+                "is_scheduled": "1",
+                "schedule_window": "auto",
+                "alert_comparator": "greater than",
+                "alert_threshold": "0",
+                "alert.digest_mode": "0",
+                "cron_schedule": "*/5 * * * *",
+                "actions": "trackme_notable,trackme_auto_ack,trackme_smart_status",
+                "action.trackme_notable.title": "$name$",
+                "action.trackme_smart_status.param.tenant_id": "$result.tenant_id$",
+                "action.trackme_auto_ack.param.object_category": "$result.object_category$",
+                "action.trackme_auto_ack.param.object_name": "$result.object$",
+                "action.trackme_auto_ack.param.ack_period": "86400",
+                "action.trackme_auto_ack.param.ack_type": "unsticky",
+                "action.trackme_smart_status.param.object_category": "$result.object_category$",
+                "action.trackme_smart_status.param.object_name": "$result.object$"
+            }
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/alerting/admin/create_alert",
+        "ctime": 1707218303.0556366
+    },
+    "ed607b3c46190f2640852352d09e6ed0": {
+        "transaction_request": {
+            "tenant_name": "license-usage",
+            "tenant_alias": "07 - License usage",
+            "tenant_desc": "License usage tracking",
+            "tenant_roles_admin": "trackme_admin",
+            "tenant_roles_power": "trackme_power",
+            "tenant_roles_user": "trackme_user",
+            "tenant_owner": "admin",
+            "tenant_idx_settings": "global",
+            "tenant_flx_enabled": "true"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/vtenants/admin/add_tenant",
+        "ctime": 1707218615.5067143
+    },
+    "b809b43cd7bba8162b33cf056f694148": {
+        "transaction_request": {
+            "tenant_id": "license-usage",
+            "alert_name": "TrackMe alert tenant_id:license-usage - Alert splk-flx",
+            "alert_search": "| `get_splk_flx_table(license-usage,*,*)`\n| where monitored_state=\"enabled\"\n| appendcols [ | inputlookup trackme_maintenance_mode ] | filldown maintenance_mode | where NOT maintenance_mode=\"enabled\"\n| search object=\"*\"\n| search priority=\"*\"\n| where (object_state=\"red\" OR object_state=\"orange\") | search object_state=\"red\"\n| `AnyTime`\n| where ack_state!=\"active\"",
+            "alert_properties": {
+                "description": "TrackMe alert",
+                "alert_type": "number of events",
+                "alert.severity": "5",
+                "alert.suppress": "1",
+                "alert.suppress.fields": "object",
+                "alert.suppress.period": "15m",
+                "alert.track": "1",
+                "dispatch.earliest_time": "-5m",
+                "dispatch.latest_time": "now",
+                "is_scheduled": "1",
+                "schedule_window": "auto",
+                "alert_comparator": "greater than",
+                "alert_threshold": "0",
+                "alert.digest_mode": "0",
+                "cron_schedule": "*/5 * * * *",
+                "actions": "trackme_notable,trackme_auto_ack,trackme_smart_status",
+                "action.trackme_notable.title": "$name$",
+                "action.trackme_smart_status.param.tenant_id": "$result.tenant_id$",
+                "action.trackme_auto_ack.param.object_category": "$result.object_category$",
+                "action.trackme_auto_ack.param.object_name": "$result.object$",
+                "action.trackme_auto_ack.param.ack_period": "86400",
+                "action.trackme_auto_ack.param.ack_type": "unsticky",
+                "action.trackme_smart_status.param.object_category": "$result.object_category$",
+                "action.trackme_smart_status.param.object_name": "$result.object$"
+            }
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/alerting/admin/create_alert",
+        "ctime": 1707218690.2980025
+    },
+    "511466e91595e13f485cd2fd23735fab": {
+        "transaction_request": {
+            "tenant_name": "deployment-servers",
+            "tenant_alias": "08 - DS infra",
+            "tenant_desc": "Deployment Servers infra tracking",
+            "tenant_roles_admin": "trackme_admin",
+            "tenant_roles_power": "trackme_power",
+            "tenant_roles_user": "trackme_user",
+            "tenant_owner": "admin",
+            "tenant_idx_settings": "global",
+            "tenant_flx_enabled": "true"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/vtenants/admin/add_tenant",
+        "ctime": 1707218721.743299
+    },
+    "130e37e10fddf1489e69c5de1fa4080a": {
+        "transaction_request": {
+            "tenant_id": "deployment-servers",
+            "alert_name": "TrackMe alert tenant_id:deployment-servers - Alert splk-flx",
+            "alert_search": "| `get_splk_flx_table(deployment-servers,*,*)`\n| where monitored_state=\"enabled\"\n| appendcols [ | inputlookup trackme_maintenance_mode ] | filldown maintenance_mode | where NOT maintenance_mode=\"enabled\"\n| search object=\"*\"\n| search priority=\"*\"\n| where (object_state=\"red\" OR object_state=\"orange\") | search object_state=\"red\"\n| `AnyTime`\n| where ack_state!=\"active\"",
+            "alert_properties": {
+                "description": "TrackMe alert",
+                "alert_type": "number of events",
+                "alert.severity": "5",
+                "alert.suppress": "1",
+                "alert.suppress.fields": "object",
+                "alert.suppress.period": "15m",
+                "alert.track": "1",
+                "dispatch.earliest_time": "-5m",
+                "dispatch.latest_time": "now",
+                "is_scheduled": "1",
+                "schedule_window": "auto",
+                "alert_comparator": "greater than",
+                "alert_threshold": "0",
+                "alert.digest_mode": "0",
+                "cron_schedule": "*/5 * * * *",
+                "actions": "trackme_notable,trackme_auto_ack,trackme_smart_status",
+                "action.trackme_notable.title": "$name$",
+                "action.trackme_smart_status.param.tenant_id": "$result.tenant_id$",
+                "action.trackme_auto_ack.param.object_category": "$result.object_category$",
+                "action.trackme_auto_ack.param.object_name": "$result.object$",
+                "action.trackme_auto_ack.param.ack_period": "86400",
+                "action.trackme_auto_ack.param.ack_type": "unsticky",
+                "action.trackme_smart_status.param.object_category": "$result.object_category$",
+                "action.trackme_smart_status.param.object_name": "$result.object$"
+            }
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/alerting/admin/create_alert",
+        "ctime": 1707218802.8782814
+    },
+    "18b096a6b6b84c690130e8cf2a2f6883": {
+        "transaction_request": {
+            "tenant_name": "heavy-forwarders",
+            "tenant_alias": "09 - Heavy Forwarders",
+            "tenant_desc": "Heavy Forwarders infra tracking",
+            "tenant_roles_admin": "trackme_admin",
+            "tenant_roles_power": "trackme_power",
+            "tenant_roles_user": "trackme_user",
+            "tenant_owner": "admin",
+            "tenant_idx_settings": "global",
+            "tenant_flx_enabled": "true"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/vtenants/admin/add_tenant",
+        "ctime": 1707219192.022216
+    },
+    "5c2dac27fca2b75f08b032d81474cb0f": {
+        "transaction_request": {
+            "tenant_id": "heavy-forwarders",
+            "alert_name": "TrackMe alert tenant_id:heavy-forwarders - Alert splk-flx",
+            "alert_search": "| `get_splk_flx_table(heavy-forwarders,*,*)`\n| where monitored_state=\"enabled\"\n| appendcols [ | inputlookup trackme_maintenance_mode ] | filldown maintenance_mode | where NOT maintenance_mode=\"enabled\"\n| search object=\"*\"\n| search priority=\"*\"\n| where (object_state=\"red\" OR object_state=\"orange\") | search object_state=\"red\"\n| `AnyTime`\n| where ack_state!=\"active\"",
+            "alert_properties": {
+                "description": "TrackMe alert",
+                "alert_type": "number of events",
+                "alert.severity": "5",
+                "alert.suppress": "1",
+                "alert.suppress.fields": "object",
+                "alert.suppress.period": "15m",
+                "alert.track": "1",
+                "dispatch.earliest_time": "-5m",
+                "dispatch.latest_time": "now",
+                "is_scheduled": "1",
+                "schedule_window": "auto",
+                "alert_comparator": "greater than",
+                "alert_threshold": "0",
+                "alert.digest_mode": "0",
+                "cron_schedule": "*/5 * * * *",
+                "actions": "trackme_notable,trackme_auto_ack,trackme_smart_status",
+                "action.trackme_notable.title": "$name$",
+                "action.trackme_smart_status.param.tenant_id": "$result.tenant_id$",
+                "action.trackme_auto_ack.param.object_category": "$result.object_category$",
+                "action.trackme_auto_ack.param.object_name": "$result.object$",
+                "action.trackme_auto_ack.param.ack_period": "86400",
+                "action.trackme_auto_ack.param.ack_type": "unsticky",
+                "action.trackme_smart_status.param.object_category": "$result.object_category$",
+                "action.trackme_smart_status.param.object_name": "$result.object$"
+            }
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/alerting/admin/create_alert",
+        "ctime": 1707219419.240293
+    },
+    "c2de3253213540dab6f1bbfffd6a96d7": {
+        "transaction_request": {
+            "tenant_name": "siem-controls",
+            "tenant_alias": "10 - SIEM controls",
+            "tenant_desc": "SIEM controls & monitoring",
+            "tenant_roles_admin": "trackme_admin",
+            "tenant_roles_power": "trackme_power",
+            "tenant_roles_user": "trackme_user",
+            "tenant_owner": "admin",
+            "tenant_idx_settings": "global",
+            "tenant_flx_enabled": "true"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/vtenants/admin/add_tenant",
+        "ctime": 1707219439.1739202
+    },
+    "aec0a460ac763a9577dcc51192cdf92a": {
+        "transaction_request": {
+            "tenant_id": "siem-controls",
+            "alert_name": "TrackMe alert tenant_id:siem-controls - Alert splk-flx",
+            "alert_search": "| `get_splk_flx_table(siem-controls,*,*)`\n| where monitored_state=\"enabled\"\n| appendcols [ | inputlookup trackme_maintenance_mode ] | filldown maintenance_mode | where NOT maintenance_mode=\"enabled\"\n| search object=\"*\"\n| search priority=\"*\"\n| where (object_state=\"red\" OR object_state=\"orange\") | search object_state=\"red\"\n| `AnyTime`\n| where ack_state!=\"active\"",
+            "alert_properties": {
+                "description": "TrackMe alert",
+                "alert_type": "number of events",
+                "alert.severity": "5",
+                "alert.suppress": "1",
+                "alert.suppress.fields": "object",
+                "alert.suppress.period": "15m",
+                "alert.track": "1",
+                "dispatch.earliest_time": "-5m",
+                "dispatch.latest_time": "now",
+                "is_scheduled": "1",
+                "schedule_window": "auto",
+                "alert_comparator": "greater than",
+                "alert_threshold": "0",
+                "alert.digest_mode": "0",
+                "cron_schedule": "*/5 * * * *",
+                "actions": "trackme_notable,trackme_auto_ack,trackme_smart_status",
+                "action.trackme_notable.title": "$name$",
+                "action.trackme_smart_status.param.tenant_id": "$result.tenant_id$",
+                "action.trackme_auto_ack.param.object_category": "$result.object_category$",
+                "action.trackme_auto_ack.param.object_name": "$result.object$",
+                "action.trackme_auto_ack.param.ack_period": "86400",
+                "action.trackme_auto_ack.param.ack_type": "unsticky",
+                "action.trackme_smart_status.param.object_category": "$result.object_category$",
+                "action.trackme_smart_status.param.object_name": "$result.object$"
+            }
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/alerting/admin/create_alert",
+        "ctime": 1707219512.1009629
+    },
+    "528868383f46d43c9c1736976cb0c280": {
+        "transaction_request": {
+            "tenant_name": "clusters",
+            "tenant_alias": "11 - Indexer Clusters",
+            "tenant_desc": "Splunk Clustered Indexers",
+            "tenant_roles_admin": "trackme_admin",
+            "tenant_roles_power": "trackme_power",
+            "tenant_roles_user": "trackme_user",
+            "tenant_owner": "admin",
+            "tenant_idx_settings": "global",
+            "tenant_flx_enabled": "true"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/vtenants/admin/add_tenant",
+        "ctime": 1707219549.7605617
+    },
+    "cd67b71f5c3b65a73ab3b14844243db3": {
+        "transaction_request": {
+            "tenant_id": "clusters",
+            "alert_name": "TrackMe alert tenant_id:clusters - Alert splk-flx",
+            "alert_search": "| `get_splk_flx_table(clusters,*,*)`\n| where monitored_state=\"enabled\"\n| appendcols [ | inputlookup trackme_maintenance_mode ] | filldown maintenance_mode | where NOT maintenance_mode=\"enabled\"\n| search object=\"*\"\n| search priority=\"*\"\n| where (object_state=\"red\" OR object_state=\"orange\") | search object_state=\"red\"\n| `AnyTime`\n| where ack_state!=\"active\"",
+            "alert_properties": {
+                "description": "TrackMe alert",
+                "alert_type": "number of events",
+                "alert.severity": "5",
+                "alert.suppress": "1",
+                "alert.suppress.fields": "object",
+                "alert.suppress.period": "15m",
+                "alert.track": "1",
+                "dispatch.earliest_time": "-5m",
+                "dispatch.latest_time": "now",
+                "is_scheduled": "1",
+                "schedule_window": "auto",
+                "alert_comparator": "greater than",
+                "alert_threshold": "0",
+                "alert.digest_mode": "0",
+                "cron_schedule": "*/5 * * * *",
+                "actions": "trackme_notable,trackme_auto_ack,trackme_smart_status",
+                "action.trackme_notable.title": "$name$",
+                "action.trackme_smart_status.param.tenant_id": "$result.tenant_id$",
+                "action.trackme_auto_ack.param.object_category": "$result.object_category$",
+                "action.trackme_auto_ack.param.object_name": "$result.object$",
+                "action.trackme_auto_ack.param.ack_period": "86400",
+                "action.trackme_auto_ack.param.ack_type": "unsticky",
+                "action.trackme_smart_status.param.object_category": "$result.object_category$",
+                "action.trackme_smart_status.param.object_name": "$result.object$"
+            }
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/alerting/admin/create_alert",
+        "ctime": 1707219640.9618518
+    },
+    "e1e71d1ca8da6f80abd86773cd357025": {
+        "transaction_request": {
+            "tenant_name": "cribl-mon",
+            "tenant_alias": "12 - Cribl Monitoring",
+            "tenant_desc": "Monitoring of Cribl Logstream",
+            "tenant_roles_admin": "trackme_admin",
+            "tenant_roles_power": "trackme_power",
+            "tenant_roles_user": "trackme_user",
+            "tenant_owner": "admin",
+            "tenant_idx_settings": "global",
+            "tenant_flx_enabled": "true"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/vtenants/admin/add_tenant",
+        "ctime": 1707219714.6718628
+    },
+    "25793f3c1c9159e262f406563a543869": {
+        "transaction_request": {
+            "tenant_id": "cribl-mon",
+            "alert_name": "TrackMe alert tenant_id:cribl-mon - Alert splk-flx",
+            "alert_search": "| `get_splk_flx_table(cribl-mon,*,*)`\n| where monitored_state=\"enabled\"\n| appendcols [ | inputlookup trackme_maintenance_mode ] | filldown maintenance_mode | where NOT maintenance_mode=\"enabled\"\n| search object=\"*\"\n| search priority=\"*\"\n| where (object_state=\"red\" OR object_state=\"orange\") | search object_state=\"red\"\n| `AnyTime`\n| where ack_state!=\"active\"",
+            "alert_properties": {
+                "description": "TrackMe alert",
+                "alert_type": "number of events",
+                "alert.severity": "5",
+                "alert.suppress": "1",
+                "alert.suppress.fields": "object",
+                "alert.suppress.period": "15m",
+                "alert.track": "1",
+                "dispatch.earliest_time": "-5m",
+                "dispatch.latest_time": "now",
+                "is_scheduled": "1",
+                "schedule_window": "auto",
+                "alert_comparator": "greater than",
+                "alert_threshold": "0",
+                "alert.digest_mode": "0",
+                "cron_schedule": "*/5 * * * *",
+                "actions": "trackme_notable,trackme_auto_ack,trackme_smart_status",
+                "action.trackme_notable.title": "$name$",
+                "action.trackme_smart_status.param.tenant_id": "$result.tenant_id$",
+                "action.trackme_auto_ack.param.object_category": "$result.object_category$",
+                "action.trackme_auto_ack.param.object_name": "$result.object$",
+                "action.trackme_auto_ack.param.ack_period": "86400",
+                "action.trackme_auto_ack.param.ack_type": "unsticky",
+                "action.trackme_smart_status.param.object_category": "$result.object_category$",
+                "action.trackme_smart_status.param.object_name": "$result.object$"
+            }
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/alerting/admin/create_alert",
+        "ctime": 1707219866.1984625
+    },
+    "6ff8def5245dc2231912bf191a26aec7": {
+        "transaction_request": {
+            "tenant_id": "license-usage",
+            "component": "flx",
+            "tracker_name": "splk_license_pool_usage",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| rest splunk_server=local /services/licenser/pools | rename title AS pool\n| search [ rest splunk_server=local /services/licenser/groups | search is_active=1 | eval stack_id=stack_ids | fields stack_id ]\n| eval quota=if(isnull(effective_quota),quota,effective_quota)\n| eval pool_pct_used=round(used_bytes/quota*100,2), pool_used_gb=round(used_bytes/1024/1024/1024, 3), pool_quota_gb=round(quota/1024/1024/1024, 3)\n| fields pool description pool_pct_used pool_used_gb pool_quota_gb\n\n``` set object and object description ```\n| eval object = \"pool:\" . pool, object_description = \"License pool: \" . description\n\n``` set group ```\n| eval group=\"infrastructure\"\n\n``` set status and status_description ```\n| eval status=case(\npool_pct_used<90, 1,\npool_pct_used>=90, 2,\n1=1, 3)\n| eval status_description=case(\nstatus=1, \"The pool usage is healthy: \" . pool_pct_used . \" % used\", \nstatus=2, \"The license pool usage is in alert with usage>90%, \" . pool_pct_used . \" % used\", \nstatus=3, \"The license pool usage is unknown\")\n\n``` set metrics and outliers metrics ```\n| eval metrics = \"{'license.pool_pct_used': \" . pool_pct_used . \", 'license.pool_used_gb': \" . pool_used_gb . \", 'license.pool_quota_gb': \" . pool_quota_gb . \"}\"\n| eval outliers_metrics = \"{'license.pool_pct_used': {'alert_lower_breached': 0, 'alert_upper_breached': 1}}\"\n\n``` alert if inactive for more than 1 hour```\n| eval max_sec_inactive=3600",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707219934.1115842
+    },
+    "5e601ea4b77194a42c47e846ab0bde33": {
+        "transaction_request": {
+            "tenant_id": "license-usage",
+            "component": "flx",
+            "tracker_name": "splk_license_usage_per_index",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "index=_internal sourcetype=splunkd source=\"*/license_usage.log\" earliest=\"-24h\" latest=\"now\"\n| stats sum(b) as b, latest(poolsz) as poolsz by idx, pool\n| eval last_24h_volume_mb = round(b/1024/1024, 2), last_24h_pool_pct_used=round(b/poolsz*100, 2)\n| fields idx, pool, last_24h_volume_mb, last_24h_pool_pct_used\n| eval object = \"idx:\" . idx\n\n``` get last 4 hours ```\n| append [ search index=_internal sourcetype=splunkd source=\"*/license_usage.log\" earliest=\"-4h\" latest=\"now\"\n| stats sum(b) as b, latest(poolsz) as poolsz by idx, pool\n| eval last_4h_volume_mb = round(b/1024/1024, 2), last_4h_pool_pct_used=round(b/poolsz*100, 2)\n| fields idx, pool, last_4h_volume_mb, last_4h_pool_pct_used\n| eval object = \"idx:\" . idx\n]\n\n``` get last 60 minutes ```\n| append [ search index=_internal sourcetype=splunkd source=\"*/license_usage.log\" earliest=\"-60m\" latest=\"now\"\n| stats sum(b) as b, latest(poolsz) as poolsz by idx, pool\n| eval last_60m_volume_mb = round(b/1024/1024, 2), last_60m_pool_pct_used=round(b/poolsz*100, 2)\n| fields idx, pool, last_60m_volume_mb, last_60m_pool_pct_used\n| eval object = \"idx:\" . idx\n]\n\n| stats first(*) as \"*\" by object\n| foreach last_* [ eval <<FIELD>> = if(isnum('<<FIELD>>'), '<<FIELD>>', 0) ]\n\n| eval group=\"license|pool:\" . pool\n| eval alias = idx\n| eval object_description = \"Splunk license usage for index: \" . idx . \" / pool: \" . pool\n\n``` set status: in this case this is always going to be green, we will rely on outliers detection to detect an upperBound outlier against the rolling 24hours metrics ```\n| eval status=1\n\n``` set status_description ```\n| eval status_description=case(\nstatus=1, \"last_24h_volume_mb: \" . last_24h_volume_mb . \", last_24h_pool_pct_used: \" . last_24h_pool_pct_used, \nstatus=2, \"last_24h_volume_mb: \" . last_24h_volume_mb . \", last_24h_pool_pct_used: \" . last_24h_pool_pct_used, \nstatus=3, \"last_24h_volume_mb: \" . last_24h_volume_mb . \", last_24h_pool_pct_used: \" . last_24h_pool_pct_used\n)\n\n``` Set metrics and outliers ```\n| eval metrics = \"{\\\"splunk.license.last_60m_volume_mb\\\": \" . if(isnum(last_60m_volume_mb), last_60m_volume_mb, 0) . \", \\\"splunk.license.last_4h_volume_mb\\\": \" . if(isnum(last_4h_volume_mb), last_4h_volume_mb, 0) . \", \\\"splunk.license.last_24h_volume_mb\\\": \" . if(isnum(last_24h_volume_mb), last_24h_volume_mb, 0) . \", \\\"splunk.license.last_60m_pool_pct_used\\\": \" . if(isnum(last_60m_pool_pct_used), last_60m_pool_pct_used, 0) . \", \\\"splunk.license.last_4h_pool_pct_used\\\": \" . if(isnum(last_4h_pool_pct_used), last_4h_pool_pct_used, 0) . \", \\\"splunk.license.last_24h_pool_pct_used\\\": \" . if(isnum(last_24h_pool_pct_used), last_24h_pool_pct_used, 0) .\"}\"\n\n| eval outliers_metrics = \"{\\\"splunk.license.last_24h_volume_mb\\\": {\\\"alert_lower_breached\\\": 0, \\\"alert_upper_breached\\\": 1}, \\\"splunk.license.last_24h_pool_pct_used\\\": {\\\"alert_lower_breached\\\": 0, \\\"alert_upper_breached\\\": 1}}\"\n\n``` alert if inactive for more than 30 days```\n| eval max_sec_inactive=30*24*60*60",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707220090.629575
+    },
+    "27b824ccb69dd8aa832659419372eed6": {
+        "transaction_request": {
+            "tenant_id": "heavy-forwarders",
+            "component": "flx",
+            "tracker_name": "splk_queues_filling",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "index=_internal source=*metrics.log sourcetype=splunkd host=* host!=c0m1*.splunkcloud.com host!=sh*.splunkcloud.com host!=idx*.splunkcloud.com NOT HttpInputDataHandler NOT \"splunk-system-user\" component=Metrics group=queue \n| eval max=if(isnotnull(max_size_kb),max_size_kb,max_size) \n| eval curr=if(isnotnull(current_size_kb),current_size_kb,current_size) \n| eval fill_perc=round((curr/max)*100,2) \n| stats max(ingest_pipe) as max_pipelines max(max_size_kb) as max_size_kb max(current_size) as current_size max(largest_size) as largest_size max(smallest_size) as smallest_size max(fill_perc) as max_queue_fill_percent avg(fill_perc) AS avg_pct_fill_queue latest(fill_perc) as latest_queue_fill_percent by name host\n| eval avg_pct_fill_queue=round(avg_pct_fill_queue,2)\n\n```\nmax_pipelines will no exist if there is a single concurrent pipeline```\n| eval max_pipelines = if(isnum(max_pipelines), max_pipelines, 1)\n\n``` ensures every metric has a value ```\n| foreach max_size_kb, current_size, largest_size, smallest_size, max_queue_fill_percent, avg_pct_fill_queue, latest_queue_fill_percent [ eval <<FIELD>> = if(isnum('<<FIELD>>'), '<<FIELD>>', 0) ]\n\n``` set status and status_description ```\n| eval status=case(avg_pct_fill_queue>80 AND avg_pct_fill_queue<90, 3, avg_pct_fill_queue>=90, 2, 1=1, 1)\n| eval status_description=case(status=1, \"The queue is healthy, Avg pct filling: \" . round(avg_pct_fill_queue, 2), status=2, \"The queue is in alert with filling>90%, Avg pct filling: \" . round(avg_pct_fill_queue, 2), status=3, \"The queue is in warning with filling>80% and <90%, Avg pct filling: \" . round(avg_pct_fill_queue, 2))\n\n``` set group ```\n| eval group=\"infrastructure:splk_queue_filling\"\n\n``` set object, object_description and alias ```\n| eval object = host . \":\" . name, alias=object\n| eval object_description = \"Splunk Queue: \" . name . \" for host: \" . host . \", max_pipelines: \" . max_pipelines . \", max_size_kb: \" . max_size_kb  \n\n``` set metrics ```\n| eval metrics = \"{'queue.avg_pct_fill_queue': \" . avg_pct_fill_queue . \", 'queue_max_pipelines': \" . max_pipelines .\", 'queue_max_size_kb': \" . max_size_kb .\", 'queue_current_size': \" . current_size . \", 'queue_largest_size': \" . largest_size . \", 'queue_smallest_size': \" . smallest_size . \", 'queue_max_queue_fill_percent': \" . max_queue_fill_percent . \", 'queue_pct_fill_queue': \" . avg_pct_fill_queue . \", 'queue_latest_fill_percent': \" . latest_queue_fill_percent . \"}\"\n\n``` queues can be inactive and not generating any results, do not alert if so ```\n| eval max_sec_inactive=0",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707220563.0110323
+    },
+    "7adba50d7b1edc2aceb203d778378406": {
+        "transaction_request": {
+            "tenant_id": "siem-controls",
+            "component": "flx",
+            "tracker_name": "splk_dma",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| rest /services/admin/summarization by_tstats=t splunk_server=local count=0\n| eval key=replace('title',\"tstats:DM_\".'eai:acl.app'.\"_\",\"\"),datamodel=replace('summary.id',\"DM_\".'eai:acl.app'.\"_\",\"\")\n| join type=left key\n\n[| rest /services/data/models splunk_server=local count=0\n| table title acceleration acceleration.cron_schedule eai:digest\n| rename title as key\n| rename acceleration.cron_schedule AS cron, acceleration as enabled ]\n\n| table datamodel eai:acl.app summary.access_time summary.is_inprogress summary.size summary.latest_time summary.complete summary.buckets_size summary.buckets cron summary.last_error summary.time_range summary.id summary.mod_time eai:digest summary.earliest_time summary.last_sid summary.access_count, enabled\n| rename summary.id AS summary_id, summary.time_range AS retention, summary.earliest_time as earliest, summary.latest_time as latest, eai:digest as digest\n| rename summary.* AS *, eai:acl.* AS *\n| sort datamodel\n| rename \"Datamodel_Acceleration.*\" as *\n| join type=outer last_sid\n\n[| rest splunk_server=local count=0 /services/search/jobs reportSearch=summarize*\n| rename sid as last_sid\n| fields last_sid,runDuration]\n\n| eval size_mb=round(size/1048576, 2), retention_days=if(retention==0,\"unlimited\",round(retention/86400,1)), complete_pct=round(complete*100, 2)\n| eval group = \"datamodels\", object = app . \":\" . datamodel, alias = object\n| eval object_description = \"Datamodel: \" . datamodel . \", app: \" . app . \", retention days: \" . retention_days\n\n| foreach complete_pct, size_mb, runDuration, buckets [ eval <<FIELD>> = if(isnum('<<FIELD>>'), '<<FIELD>>', 0) ]\n\n| eval metrics = \"{'dma.complete_pct': \" . complete_pct . \", 'dma.size_mb': \" . size_mb . \", 'dma.runduration_sec': \" . round(runDuration, 2) . \", 'dma.buckets_count': \" . buckets . \"}\"\n| eval outliers_metrics = \"{'dma.runduration_sec': {'alert_lower_breached': 0, 'alert_upper_breached': 1, 'time_factor': 'none'}}\"\n| eval status=case( enabled!=1, 2, enabled=1 AND complete_pct<99, 2, complete_pct>=99, 1,isnull(complete_pct) OR complete_pct=\"\", 3, 1=1, 3)\n| eval status_description=case( enabled!=1, \"acceleration is not enabled\", enabled=1 AND complete_pct<99, \"acceleration is not completed\", complete_pct>=99, \"acceleration is completed\",isnull(complete_pct) OR complete_pct=\"\", \"acceleration status is unknown\")\n| table group, object, alias, object_description, metrics, outliers_metrics, status, status_description\n\n``` alert if inactive for more than 3600 sec```\n| eval max_sec_inactive=3600",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707220637.3426323
+    },
+    "3d5533c977c2d7450b5d449a30461be6": {
+        "transaction_request": {
+            "tenant_id": "siem-controls",
+            "component": "flx",
+            "tracker_name": "splk_kvstore_size",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| rest splunk_server=local count=0 timeout=600 /services/server/introspection/kvstore/collectionstats\n\n``` filter and parse data ```\n| fields data\n| mvexpand data\n| spath input=data\n\n``` extract app and collection ```\n| rex field=ns \"(?<app>.*)\\.(?<collection>.*)\"\n\n``` get size MB ```\n| eval dbsize=round(size/1024/1024, 2)\n| stats first(count) AS count_records, first(dbsize) AS size_mb by app, collection\n| eventstats sum(size_mb) as total_size_mb\n\n``` set threshold and define status ```\n| eval threshold=1000\n\n``` if you wish to handle specific cases such as accepting exceptions for a given collection, you can handle this in the condition bellow ```\n``` uncomment and customize as needed ```\n``` | eval threshold=case(\ncollection=\"mysuperlargecoll\", 5000,\ncollection=\"anothercoll\", 3000,\n1=1, threshold\n)\n```\n\n| eval collection_in_alert=if(\nsize_mb>threshold, collection, \nnull()\n)\n\n``` set the object ```\n| eval objects = \"app:\" . app . \"|collection:\" . collection_in_alert . \"|size_mb:\" . size_mb\n| stats values(objects) as objects, dc(objects) as detected_count, first(total_size_mb) as total_size_mb\n\n``` set group and object description ```\n| eval group = \"infrastructure\"\n| eval object_description = \"Splunk KVStore collection(s) size in alert\"\n| eval object=\"kvstore-collections-size-alert\"\n\n``` set the status ```\n| eval status=case(\ndetected_count=0, 1,\ndetected_count>=1, 2,\n1=1, 3\n)\n\n``` set the status_description ```\n| eval status_description = case(\nstatus=1, \"No anomalies were detected\",\nstatus=2, \"KVstore collection(s) were detected with a size over accepted thresholds (see the extra_attributs field or notable events the list of alerts), detected_count: \" . detected_count . \" , list (first 1k chars): \" . substr(mvjoin(objects, \" | \"), 1, 1000),\nstatus=3, \"detection status is unknown\"\n)\n\n``` keep the detected_count as a metric ```\n| eval metrics = \"{\" . \"'infrastructure.kvstore.alltime.total_size_mb': \" . total_size_mb . \", 'infrastructure.kvstore.size_alert.detected_count': \" . detected_count . \"}\"\n\n``` keep the details objects in the extra_attributes ```\n| rex field=alerts mode=sed \"s/\\\"/\\\\\\\"/g\"\n| eval extra_attributes  = \"{\\\"objects\\\": [\\\"\" . mvjoin(objects, \"\\\", \\\"\") . \"\\\"]}\"\n\n``` alert if inactive for more than 1 day```\n| eval max_sec_inactive=86400",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707220702.0935347
+    },
+    "f18609e2f8848924ee50b2f7c88f27bc": {
+        "transaction_request": {
+            "tenant_id": "siem-controls",
+            "component": "flx",
+            "tracker_name": "splk_large_lookup_fies",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| rest timeout=600 count=0 splunk_server=local /servicesNS/-/-/data/transforms/lookups getsize=true f=size f=filename f=eai*\n| fields updated author filename eai:acl.app size\n| rename eai:acl.app as app\n| eval size_mb = round(size / 1024 / 1024, 2)\n\n``` set the object ```\n| eval objects = \"app:\" . app . \"|lookup:\" . filename . \"|size_mg:\" . size_mb\n\n``` define a per lookup status depending on size thesholds, customize as per your preferences: ```\n| eval status_lookup = case(\nsize_mb<100, 1,\nsize_mb>=100, 2,\n1=1, 3\n)\n\n``` use eventstats to keep the system level metric ```\n| eventstats sum(size_mb) as total_size_mb\n\n``` filter on lookups in alert ```\n| eval objects=if(status_lookup>1, objects, null())\n\n``` you can ignore unwanted applications or lookup at this stage, things that you do not want to monitor ```\n```ex: ```\n```search app!=\"myapp\" ```\n```search filename!=\"mylookup.csv\" ```\n\n``` aggregate ```\n| stats values(objects) as objects, dc(objects) as detected_count, first(total_size_mb) as total_size_mb\n\n``` set group and object description ```\n| eval group = \"infrastructure\", object=\"lookup-files-size-alert\", object_description=\"This use case monitors for large lookup files, which can have impact the cluster bundle replication performance\"\n\n``` set the per lookup file status ```\n| eval status=case(\n    detected_count=0, 1,\n    detected_count>0, 2,\n    1=1, 3\n    )\n    \n``` generate the total size mb metric ```\n| eval metrics = \"{'lookup.total_size_mb': \" . total_size_mb . \"}\"\n\n``` we can also leverage ML outliers detection, if the total size of the lookups goes beyond a usual threshold, ML would trigger (in this case we only care about upperbound outliers) ```\n``` you can remove this statement if you do not want to use ML for this use case ```\n| eval outliers_metrics = \"{'lookup.total_size_mb': {'alert_lower_breached': 0, 'alert_upper_breached': 1}}\"\n\n``` set the status_description ```\n| eval status_description = case(\nstatus=1, \"No anomalies were detected\",\nstatus=2, \"Lookup file(s) were detected with size beyond accepted thresholds, detected_count: \" . detected_count . \" , list (first 1k chars): \" . substr(mvjoin(objects, \" | \"), 1, 1000),\nstatus=3, \"detection status is unknown\"\n)\n\n``` keep the details objects in the extra_attributes ```\n| rex field=objects mode=sed \"s/\\\"/\\\\\\\"/g\"\n| eval extra_attributes  = \"{\\\"objects\\\": [\\\"\" . mvjoin(objects, \"\\\", \\\"\") . \"\\\"]}\"\n\n``` alert if inactive for more than 1h ```\n| eval max_sec_inactive=3600",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "0 */12 * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707220754.5211034
+    },
+    "45fd09a3cf60162234b0fdc46caa9a7c": {
+        "transaction_request": {
+            "tenant_id": "siem-controls",
+            "component": "flx",
+            "tracker_name": "splk_lastchanceindex",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| tstats count as events_count, max(_time) as _time, dc(source) as sources_count where index=lastchanceindex by index, sourcetype\n| eval time = strftime(_time, \"%c\")\n\n| eval object=\"sourcetype:\" . sourcetype . \"|\" . \"last_event:\" . time . \"|\" . \"sources_count:\" . sources_count . \"|\" . \"events_count:\" . events_count\n\n| stats max(events_count) as events_count, dc(sourcetype) as detected_count, max(_time) as events_time, first(sources_count) as sources_count, values(object) as objects\n| eventstats sum(events_count) as total_count\n\n``` set group, object and object description ```\n| eval group = \"data_collection\"\n| eval object = \"control_siem_col-006_lastchance:lastchanceindex\"\n| eval object_description = \"Splunk last chance index\"\n\n``` set the status ```\n| eval status=case(\ndetected_count=0, 1,\ndetected_count>=1, 2,\n1=1, 3\n)\n\n``` set the status_description ```\n| eval status_description = case(\nstatus=1, \"no events were detected in the lastchanceindex, last_run: \" . strftime(now(), \"%c\"),\nstatus=2, \"events detected in the lastchanceindex, total_count: \" . total_count . \", sourcetype(s) count: \" . detected_count . \", sources_count: \" . sources_count . \", latest event time: \" . strftime(events_time, \"%c\"),\n1=1, \"lastchanceindex events detection status is unknown\"\n)\n\n``` keep the details objects in the extra_attributes ```\n| rex field=objects mode=sed \"s/\\\"/\\\\\\\"/g\"\n| eval extra_attributes  = \"{\\\"objects\\\": [\\\"\" . mvjoin(objects, \"\\\", \\\"\") . \"\\\"]}\"\n\n``` set metrics ```\n| eval metrics = \"{'lastchanceindex.events_count': \" . total_count . \", 'lastchanceindex.sourcetypes_count': \" .  detected_count . \"}\"\n\n``` alert if inactive for more than 2 hours```\n| eval max_sec_inactive=7200",
+            "earliest_time": "-60m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707220815.114988
+    },
+    "0612ba86d2a8802ab0b5c63f1d967765": {
+        "transaction_request": {
+            "tenant_id": "siem-controls",
+            "component": "flx",
+            "tracker_name": "splk_splunk_infra_cpu_used",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "index=_introspection sourcetype=splunk_resource_usage component=Hostwide\n| eval cpu_total_pct=('data.cpu_system_pct'+'data.cpu_user_pct')\n| stats avg(cpu_total_pct) as avg_cpu_pct by host\n| eval avg_cpu_pct=round(avg_cpu_pct, 3)\n\n``` set group and obect ```\n| eval group=\"infrastructure:cpu\"\n| rename host as object\n| eval alias = object, object_description = \"Splunk instance CPU usage\"\n\n``` set status and thresholds ```\n| eval status=case(avg_cpu_pct>=85 AND avg_cpu_pct<90, 3,avg_cpu_pct>=90, 2,avg_cpu_pct<85, 1)\n| eval status_description=case(status=3, \"Percentage of CPU usage is between 85% and 90%\", status=2, \"Percentage of CPU usage is above 90%\",status=1, \"Percentage of CPU usage is below 85%\")\n\n``` store as metrics ```\n| eval metrics = \"{'splunk_introspection.avg_cpu_pct': \" . avg_cpu_pct . \"}\"\n\n``` alert if inactive for more than 3600 sec```\n| eval max_sec_inactive=3600",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707220952.3485527
+    },
+    "f39e7b170d41976d5680d78c70aa764f": {
+        "transaction_request": {
+            "tenant_id": "siem-controls",
+            "component": "flx",
+            "tracker_name": "splk_splunk_infra_mem_used",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "index=_introspection sourcetype=splunk_resource_usage component=Hostwide\n| eval mem_used_pct=('data.mem_used'/'data.mem'*100)\n| stats avg(mem_used_pct) as avg_mem_pct by host\n| eval avg_mem_pct=round(avg_mem_pct, 3)\n\n``` set group and obect ```\n| eval group=\"infrastructure:memory\"\n| rename host as object\n| eval alias = object, object_description = \"Splunk instance Physical Memory usage\"\n\n``` set status and thresholds ```\n| eval status=case(avg_mem_pct>=85 AND avg_mem_pct<90, 3,avg_mem_pct>=90, 2,avg_mem_pct<85, 1)\n| eval status_description=case(status=3, \"Percentage of Memory usage is between 85% and 90%\", status=2, \"Percentage of Memory usage is above 90%\",status=1, \"Percentage of Memory usage is below 85%\")\n\n``` store as metrics ```\n| eval metrics = \"{'splunk_introspection.avg_mem_pct': \" . avg_mem_pct . \"}\"\n\n``` alert if inactive for more than 3600 sec```\n| eval max_sec_inactive=3600",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707221091.2058613
+    },
+    "ad1324859a10f2c617e54f5dc4bc6106": {
+        "transaction_request": {
+            "tenant_id": "siem-controls",
+            "component": "flx",
+            "tracker_name": "splk_good_practices_alltime_scheduled",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| rest \"/servicesNS/-/-/saved/searches\" timeout=600 splunk_server=local count=0\n\n``` only look at enabled ```\n| search disabled=0\n\n``` some formating ```\n| eval description_short=if(isnotnull(trim(description,\" \")),substr(description,0,127),\"\"), description_short=if((len(description_short) > 126),(description_short . \"...\"),description_short), is_alert=if((((alert_comparator != \"\") AND (alert_threshold != \"\")) AND (alert_type != \"always\")),1,0), has_report_action=if((actions != \"\"),1,0) \n| rename eai:acl.sharing as sharing, \"eai:acl.owner\" as owner, \"eai:acl.app\" as app\n| fields app, title, description_short, owner, sharing, owner, is_scheduled, cron_schedule, max_concurrent, dispatchAs, \"dispatch.earliest_time\", \"dispatch.latest_time\", actions, search, is_alert, has_report_action \n| eval object_type=case((has_report_action == 1),\"report_action\",(is_alert == 1),\"alert\",true(),\"savedsearch\")\n\n``` search for alerts or scheduled reports ```\n| where is_alert==1 OR is_scheduled==1\n\n``` conditions for alert ```\n| where ('dispatch.earliest_time'==0 OR match(search, \"earliest=0\") )\n\n``` we can manage exclusions here: ```\n| search NOT app IN (\"splunk_maxmind_db_auto_update\", \"victorops_app\")\n\n``` set the object ```\n| eval objects = \"app:\" . app . \"|owner:\" . owner . \"|scheduled:\" . title\n| table objects\n| stats values(objects) as objects, dc(objects) as detected_count\n\n``` set group and object description ```\n| eval group = \"splunk-good-practices\"\n| eval object_description = \"Alltime scheduled report(s) or alert(s) detected\"\n| eval object=\"scheduled:alltime\"\n\n``` set the status ```\n| eval status=case(\ndetected_count=0, 1,\ndetected_count>=1, 2,\n1=1, 3\n)\n\n``` set the status_description ```\n| eval status_description = case(\nstatus=1, \"No anomalies were detected\",\nstatus=2, \"Scheduled alert(s) or report(s) were detected with an Alltime period (see the extra_attributs field or notable events the list of alerts), detected_count: \" . detected_count . \" , list (first 1k chars): \" . substr(mvjoin(objects, \" | \"), 1, 1000),\nstatus=3, \"detection status is unknown\"\n)\n\n``` keep the detected_count as a metric ```\n| eval metrics = \"{'splunk_good_practices.scheduled.alltime.detected_count': \" . detected_count . \"}\"\n\n``` keep the details objects in the extra_attributes ```\n| rex field=alerts mode=sed \"s/\\\"/\\\\\\\"/g\"\n| eval extra_attributes  = \"{\\\"objects\\\": [\\\"\" . mvjoin(objects, \"\\\", \\\"\") . \"\\\"]}\"\n\n``` alert if inactive for more than 1 day```\n| eval max_sec_inactive=86400",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "0 */12 * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707221216.0937026
+    },
+    "85aac90c25e3d7a3b2c4b8532a8e6992": {
+        "transaction_request": {
+            "tenant_id": "siem-controls",
+            "component": "flx",
+            "tracker_name": "splk_good_practices_run_as_user_scheduled",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| rest \"/servicesNS/-/-/saved/searches\" timeout=600 splunk_server=local count=0\n\n``` only look at enabled ```\n| search disabled=0\n\n``` some formating ```\n| eval description_short=if(isnotnull(trim(description,\" \")),substr(description,0,127),\"\"), description_short=if((len(description_short) > 126),(description_short . \"...\"),description_short), is_alert=if((((alert_comparator != \"\") AND (alert_threshold != \"\")) AND (alert_type != \"always\")),1,0), has_report_action=if((actions != \"\"),1,0) \n| rename eai:acl.sharing as sharing, \"eai:acl.owner\" as owner, \"eai:acl.app\" as app\n| fields app, title, description_short, owner, sharing, owner, is_scheduled, cron_schedule, max_concurrent, dispatchAs, \"dispatch.earliest_time\", \"dispatch.latest_time\", actions, search, is_alert, has_report_action \n| eval object_type=case((has_report_action == 1),\"report_action\",(is_alert == 1),\"alert\",true(),\"savedsearch\")\n\n``` search for scheduled objects ```\n| where is_scheduled==1\n\n``` conditions for alert (add your service accouts in this list)```\n| search NOT owner IN (\"admin\", \"nobody\", \"svc-siem\", \"svc-trackme\")\n\n``` we can manage exclusions here: ```\n| search NOT app IN (\"splunk_maxmind_db_auto_update\", \"victorops_app\")\n\n``` set the object ```\n| eval objects = \"app:\" . app . \"|owner:\" . owner . \"|scheduled:\" . title\n| table objects\n| stats values(objects) as objects, dc(objects) as detected_count\n\n``` set group and object description ```\n| eval group = \"splunk-good-practices\"\n| eval object_description = \"Scheduled report(s) or alert(s) were detected to be running on behalf as user rather than system or service accounts\"\n| eval object=\"scheduled:run_as_user\"\n\n``` set the status ```\n| eval status=case(\ndetected_count=0, 1,\ndetected_count>=1, 2,\n1=1, 3\n)\n\n``` set the status_description ```\n| eval status_description = case(\nstatus=1, \"No anomalies were detected\",\nstatus=2, \"Scheduled alert(s) or report(s) were detected to be executed on behalf as a user rather than the system or a service account (see the extra_attributs field or notable events the list of alerts), detected_count: \" . detected_count . \" , list (first 1k chars): \" . substr(mvjoin(objects, \" | \"), 1, 1000),\nstatus=3, \"detection status is unknown\"\n)\n\n``` keep the detected_count as a metric ```\n| eval metrics = \"{'splunk_good_practices.scheduled.run_as_user.detected_count': \" . detected_count . \"}\"\n\n``` keep the details objects in the extra_attributes ```\n| rex field=objects mode=sed \"s/\\\"/\\\\\\\"/g\"\n| eval extra_attributes  = \"{\\\"objects\\\": [\\\"\" . mvjoin(objects, \"\\\", \\\"\") . \"\\\"]}\"\n\n``` alert if inactive for more than 1 day```\n| eval max_sec_inactive=86400",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "0 */12 * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707221509.4200406
+    },
+    "b98eabf12f5f1821d559e5ea28d7b196": {
+        "transaction_request": {
+            "tenant_id": "cribl-mon",
+            "component": "flx",
+            "tracker_name": "cribl_logstream_health_inputs",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| mstats max(cribl.logstream.health.inputs) as health_inputs where index=* host=* by group, input_type, input span=1m\n| foreach health_inputs [ eval <<FIELD>> = round('<<FIELD>>', 0) ]\n\n``` calculates the percentage of health checks in a certain state, this slightly limits the risk of false positive instead of simply taking the health check result as is ```\n| stats count as count_measures, count(eval(health_inputs=0)) as count_green, count(eval(health_inputs=1)) as count_yellow, count(eval(health_inputs=2)) as count_red, latest(health_inputs) as health_inputs, max(_time) as last_measure by group, input_type, input\n| eval pct_red=round(count_red/count_measures*100, 2), pct_green=round(count_green/count_measures*100, 2), pct_yellow=round(count_yellow/count_measures*100, 2)\n| eval status=case(\npct_red>=75, 2,\npct_yellow>=75, 3,\npct_green>=50, 1,\n1=1, 3\n)\n\n``` set status_description ```\n| eval status_description = \"Last health check result: \" . health_inputs . \", time: \" . strftime(last_measure, \"%c\") . \", pct_red: \" . pct_red . \", pct_green: \" . pct_green . \", pct_yellow: \" . pct_yellow\n\n``` set group, cribl already has a field called group, rename it to allow our own convention ```\n| rename group as cribl_group\n\n``` set metrics ```\n| eval metrics = \"{\" . \"'cribl_logstream.health.health_inputs': \" .  health_inputs . \", 'cribl_logstream.health.pct_red': \" . pct_red . \", 'cribl_logstream.health.pct_yellow': \" . pct_yellow . \", 'cribl_logstream.health.pct_green':\" . pct_green . \"}\"\n\n``` set group, object and object_description ```\n| eval group = \"Cribl_Logstream:health:sources\"\n| eval object = \"input|group:\" . cribl_group . \"|input_type:\" . input_type . \"|input:\" . input\n| eval object_description = \"Cribl Logstream Health input_type: \" . input_type . \", input:\" . input . \", group: \" . cribl_group\n\n``` alert if inactive for more than 3600 sec```\n| eval max_sec_inactive=3600",
+            "earliest_time": "-30m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707303348.5413275
+    },
+    "1554ab014ca30ad45e030ee602f485dc": {
+        "transaction_request": {
+            "tenant_id": "cribl-mon",
+            "component": "flx",
+            "tracker_name": "cribl_logstream_health_outputs",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| mstats max(cribl.logstream.health.outputs) as health_outputs where index=* host=* output!=\"devnull:devnull\" by group, output span=1m\n| foreach health_outputs [ eval <<FIELD>> = round('<<FIELD>>', 0) ]\n| rex field=output \"^(?<normalized_output>[^\\:]*\\:[^\\:]*):{0,1}\"\n| eval output=coalesce(normalized_output, output)\n| stats max(health_outputs) as health_outputs by _time, group, output\n\n``` calculates the percentage of health checks in a certain state, this slightly limits the risk of false positive instead of simply taking the health check result as is ```\n| stats count as count_measures, count(eval(health_outputs=0)) as count_green, count(eval(health_outputs=1)) as count_yellow, count(eval(health_outputs=2)) as count_red, latest(health_outputs) as health_outputs, max(_time) as last_measure by group, output\n| eval pct_red=round(count_red/count_measures*100, 2), pct_green=round(count_green/count_measures*100, 2), pct_yellow=round(count_yellow/count_measures*100, 2)\n| eval status=case(\npct_red>=75, 2,\npct_yellow>=75, 3,\npct_green>=50, 1,\n1=1, 3\n)\n\n``` set status_description ```\n| eval status_description = \"Last health check result: \" . health_outputs . \", time: \" . strftime(last_measure, \"%c\") . \", pct_red: \" . pct_red . \", pct_green: \" . pct_green . \", pct_yellow: \" . pct_yellow\n\n``` set group, cribl already has a field called group, rename it to allow our own convention ```\n| rename group as cribl_group\n\n``` set metrics ```\n| eval metrics = \"{\" . \"'cribl_logstream.health.health_outputs': \" .  health_outputs . \", 'cribl_logstream.health.pct_red': \" . pct_red . \", 'cribl_logstream.health.pct_green':\" . pct_green . \", 'cribl_logstream.health.pct_yellow':\" . pct_yellow . \"}\"\n\n``` set group, object and object_description ```\n| eval group = \"Cribl_Logstream:health:destinations\"\n| eval object = \"output|group:\" . cribl_group . \"|output:\" . output\n| eval object_description = \"Cribl Logstream Health output:\" . output . \", group: \" . cribl_group\n\n``` alert if inactive for more than 3600 sec```\n| eval max_sec_inactive=3600",
+            "earliest_time": "-30m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707303388.2200463
+    },
+    "e27a7b291eb689e60d097201cf0e79d7": {
+        "transaction_request": {
+            "tenant_id": "cribl-mon",
+            "component": "flx",
+            "tracker_name": "cribl_logstream_hosts_cpu_usage",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| mstats avg(cribl.logstream.system.cpu_perc) as avg_cpu_perc where index=* host=* by group, host span=1m\n| eval avg_cpu_perc=round(avg_cpu_perc, 3)\n\n``` calculates the percentage of measures over 85%, this slightly limits the risk of false positive instead of simply taking the health check result as is ```\n| stats count as count_measures, \ncount(eval(avg_cpu_perc<85)) as count_green_avg_cpu_perc, count(eval(avg_cpu_perc>=85)) as count_red_avg_cpu_perc, latest(avg_cpu_perc) as avg_cpu_perc,\nmax(_time) as last_measure by group, host\n\n| eval pct_red_avg_cpu_perc=round(count_red_avg_cpu_perc/count_measures*100, 2), pct_green_avg_cpu_perc=round(count_green_avg_cpu_perc/count_measures*100, 2)\n\n``` ensure every metric has a value ```\n| foreach avg_cpu_perc, pct_green_avg_cpu_perc, pct_red_avg_cpu_perc [ eval <<FIELD>> = if(isnum('<<FIELD>>'), '<<FIELD>>', 0) ]\n\n``` set group, cribl already has a field called group, rename it to allow our own convention ```\n| rename group as cribl_group\n\n``` set group, object and object_description ```\n| eval group = \"Cribl_Logstream:infrastructure\"\n| eval object = \"system_cpu_usage|group:\" . cribl_group . \"|host:\" . host\n| eval object_description = \"Cribl Logstream host: \" . host . \", group: \" . cribl_group\n\n| eval status=case(\navg_cpu_perc<85 AND pct_green_avg_cpu_perc>=50, 1,\navg_cpu_perc>=85 AND pct_red_avg_cpu_perc>=50, 2,\n1=1, 3\n)\n\n| eval summary = \"Latest Avg CPU usage: \" . avg_cpu_perc . \", pct_green_avg_cpu_perc: \" . pct_green_avg_cpu_perc . \", pct_red_avg_cpu_perc: \" . pct_red_avg_cpu_perc\n| eval status_description = case(\nstatus=1, \"Average CPU usage is under acceptable thresholds, \" . summary,\nstatus=2, \"Average CPU usage for this host is high and beyond acceptable thresholds, \" . summary,\nstatus=3, \"CPU pct usage is unknown or not expected, \" . summary\n)\n\n| eval metrics = \"{\\\"cribl_logstream.avg_cpu_perc\\\": \" . avg_cpu_perc . \"}\"\n``` alert if inactive for more than 3600 sec```\n| eval max_sec_inactive=3600",
+            "earliest_time": "-30m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707303428.6222086
+    },
+    "6c5efbcc9347648b1e79e31c689aca6f": {
+        "transaction_request": {
+            "tenant_id": "cribl-mon",
+            "component": "flx",
+            "tracker_name": "cribl_logstream_output_destination_pressure",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| mstats max(cribl.logstream.blocked.outputs) as blocked_outputs, max(cribl.logstream.backpressure.outputs) as backpressure_outputs where index=* host=* output!=\"devnull:devnull\" by group, output, span=1m\n| foreach blocked_outputs, backpressure_outputs [ eval <<FIELD>> = round('<<FIELD>>', 0) ]\n\n``` calculates the percentage of health checks in a certain state, this slightly limits the risk of false positive instead of simply taking the health check result as is ```\n| stats count as count_measures,\ncount(eval(blocked_outputs=0)) as count_green_blocked_outputs, count(eval(blocked_outputs=1)) as count_yellow_blocked_outputs, count(eval(blocked_outputs=2)) as count_red_blocked_outputs, latest(blocked_outputs) as blocked_outputs,\ncount(eval(backpressure_outputs=0)) as count_green_backpressure_outputs, count(eval(backpressure_outputs=1)) as count_yellow_backpressure_outputs, count(eval(backpressure_outputs=2)) as count_red_backpressure_outputs, latest(backpressure_outputs) as backpressure_outputs,\nmax(_time) as last_measure by group, output\n| eval pct_red_blocked_outputs=round(count_red_blocked_outputs/count_measures*100, 2), pct_yellow_blocked_outputs=round(count_yellow_blocked_outputs/count_measures*100, 2), pct_green_blocked_outputs=round(count_green_blocked_outputs/count_measures*100, 2)\n| eval pct_red_backpressure_outputs=round(count_red_backpressure_outputs/count_measures*100, 2), pct_yellow_backpressure_outputs=round(count_yellow_backpressure_outputs/count_measures*100, 2), pct_green_backpressure_outputs=round(count_green_backpressure_outputs/count_measures*100, 2)\n\n``` ensure every metric has a value ```\n| foreach blocked_outputs, pct_red_blocked_outputs, pct_yellow_blocked_outputs, pct_green_blocked_outputs, backpressure_outputs, pct_red_backpressure_outputs, pct_yellow_backpressure_outputs, pct_green_backpressure_outputs [ eval <<FIELD>> = if(isnum('<<FIELD>>'), '<<FIELD>>', 0) ]\n\n``` set status ```\n| eval status=case(\npct_red_blocked_outputs>=75 OR pct_red_backpressure_outputs>75, 2,\npct_yellow_blocked_outputs>=75 OR pct_yellow_backpressure_outputs>75, 3,\npct_green_blocked_outputs>=50 AND pct_green_backpressure_outputs>50, 1,\n1=1, 3\n)\n\n``` set group, cribl already has a field called group, rename it to allow our own convention ```\n| rename group as cribl_group\n\n``` set group, object and object_description ```\n| eval group = \"Cribl_Logstream:Destination\"\n| eval object = \"pressure|group:\" . cribl_group . \"|output:\" . output\n| eval object_description = \"Cribl Logstream Destination: \" . output . \", group: \" . cribl_group\n\n``` set status description ```\n| eval summary = \"blocked_outputs: \" . blocked_outputs . \", pct_red_blocked_outputs: \" . pct_red_blocked_outputs . \", pct_yellow_blocked_outputs: \" . pct_yellow_blocked_outputs . \", pct_green_blocked_outputs: \" . pct_green_blocked_outputs . \", backpressure_outputs: \" . backpressure_outputs . \", pct_red_backpressure_outputs: \" . pct_red_backpressure_outputs . \", pct_yellow_backpressure_outputs: \" . pct_yellow_backpressure_outputs . \", pct_green_backpressure_outputs: \" . pct_green_backpressure_outputs\n| eval status_description = case(\nstatus=1, \"Cribl Destination: \" . output . \" is not currently blocked or under backpressure, \" . summary,\nstatus=2, \"Cribl Destination: \" . output . \" is blocked or under backpressure, \" . summary,\nstatus=3, \"Cribl Destination: \" . output . \" is in warning blocked, under warning backpressure or the status is not expected, \" . summary\n)\n\n``` set metrics ```\n| eval metrics = \"{\" . \"'cribl_logstream.output.blocked_outputs': \" . blocked_outputs . \", \" . \"'cribl_logstream.output.pct_red_blocked_outputs': \" . pct_red_blocked_outputs . \", \" . \"'cribl_logstream.output.pct_yellow_blocked_outputs': \" . pct_yellow_blocked_outputs . \", \" . \"'cribl_logstream.output.pct_green_blocked_outputs': \" . pct_green_blocked_outputs . \", \" . \"'cribl_logstream.output.backpressure_outputs': \" . backpressure_outputs . \", \" . \"'cribl_logstream.output.pct_red_backpressure_outputs': \" . pct_red_backpressure_outputs . \", \" . \"'cribl_logstream.output.pct_yellow_backpressure_outputs': \" . pct_yellow_backpressure_outputs . \", \" . \"'cribl_logstream.output.pct_green_backpressure_outputs': \" . pct_green_backpressure_outputs . \"}\"\n\n``` alert if inactive for more than 3600 sec```\n| eval max_sec_inactive=3600",
+            "earliest_time": "-30m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707303466.4255867
+    },
+    "dfa08356922cb9977ce68f0266dbccab": {
+        "transaction_request": {
+            "tenant_id": "cribl-mon",
+            "component": "flx",
+            "tracker_name": "cribl_logstream_pipeline",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| mstats sum(cribl.logstream.pipe.in_events) as pipe_in_events, sum(cribl.logstream.pipe.out_events) as pipe_out_events, sum(cribl.logstream.pipe.dropped_events) as pipe_dropped_events where index=* host=* by group, pipeline\n| foreach pipe_in_events, pipe_out_events, pipe_dropped_events [ eval <<FIELD>> = if(isnum('<<FIELD>>'), round('<<FIELD>>', 0), 0) ]\n\n``` set group, cribl already has a field called group, rename it to allow our own convention ```\n| rename group as cribl_group\n\n``` set group and object ```\n| eval group = \"Cribl_Logstream:pipeline_traffic\"\n| eval object = \"pipeline|group:\" . cribl_group . \"|pipeline:\" . pipeline\n| eval object_description = \"Cribl Logstream Pipeline traffic: \" . pipeline . \", group: \" . cribl_group\n\n``` calculate percentage metrics (pct sent events and dropped) ```\n| eval pct_sent_events = round(pipe_out_events/pipe_in_events*100, 3), pct_dropped_events = round(pipe_dropped_events/pipe_in_events*100, 3)\n\n``` detection of anomalies is achieved via ML Outliers detection, define a basic status here ```\n| eval status=case(\npct_sent_events>0, 1,\n1=1, 3\n)\n\n| eval status_description = case(\nstatus=1, \"Cribl Pipeline: \" . pipeline . \" is healthy, in_events: \" . pipe_in_events . \" / out_events: \" . pipe_out_events . \" / dropped_events: \" . pipe_dropped_events . \", % sent events: \" . pct_sent_events . \", % dropped events: \" . pct_dropped_events,\nstatus=3, \"Cribl Pipeline: \" . pipeline . \" status is unknown or unexpected\"\n)\n\n``` set KPI metrics ```\n| eval metrics = \"{'cribl_logstream.pipeline.in_events': \" . pipe_in_events . \", 'cribl_logstream.pipeline.out_events': \" . pipe_out_events . \", 'cribl_logstream.pipeline.dropped_events': \" . pipe_dropped_events . \", 'cribl_logstream.pipeline.pct_sent_events': \" . pct_sent_events . \", 'cribl_logstream.pipeline.pct_dropped_events':\" . pct_dropped_events . \"}\"\n\n``` set ML Outliers ```\n| eval outliers_metrics = \"{'cribl_logstream.pipeline.in_events': {'alert_lower_breached': 1, 'alert_upper_breached': 0, 'time_factor': 'none'}, 'cribl_logstream.pipeline.out_events': {'alert_lower_breached': 1, 'alert_upper_breached': 0, 'time_factor': 'none'}}\"\n\n``` alert if inactive for more than 3600 sec```\n| eval max_sec_inactive=3600",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707303513.4757996
+    },
+    "681fa61622e413e39bd600444f4826f6": {
+        "transaction_request": {
+            "tenant_id": "cribl-mon",
+            "component": "flx",
+            "tracker_name": "cribl_logstream_route_traffic",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| mstats sum(cribl.logstream.route.in_bytes) as route_in_bytes, sum(cribl.logstream.route.in_events) as route_in_events, sum(cribl.logstream.route.out_bytes) as route_out_bytes, sum(cribl.logstream.route.out_events) as route_out_events where index=* host=* by group, name\n| foreach route_in_bytes, route_in_events, route_out_bytes, route_out_events [ eval <<FIELD>> = if(isnum('<<FIELD>>'), round('<<FIELD>>', 0), 0) ]\n\n``` set group, cribl already has a field called group, rename it to allow our own convention ```\n| rename group as cribl_group\n\n``` set group and object ```\n| eval group = \"Cribl_Logstream:route_traffic\"\n| eval object = \"route|group:\" . cribl_group . \"|name:\" . name\n| eval object_description = \"Cribl Logstream Route traffic: \" . name . \", group: \" . cribl_group\n\n``` set a basic status, detection of issues is achieved through ML outliers ```\n| eval status=case(\nroute_out_events>0, 1,\n1=1, 3\n)\n\n| eval route_in_mbytes=if(route_in_bytes>0, round(route_in_bytes/1024/1024, 4), 0), route_out_mbytes=if(route_out_bytes>0, round(route_out_bytes/1024/1024, 4), 0)\n\n| eval status_description = case(\nstatus=1, \"Cribl Route name: \" . name . \" is healthy, in_events: \" . route_in_events . \" / out_events: \" . route_out_events,\nstatus=3, \"Cribl Route name: \" . name . \" status is unknown or unexpected\"\n)\n\n``` set metrics ```\n| eval metrics = \"{'cribl_logstream.route.route_in_bytes': \" . route_in_bytes . \", 'cribl_logstream.route.route_out_bytes': \" . route_out_bytes . \", 'cribl_logstream.route.route_in_mbytes': \" . route_in_mbytes . \", 'cribl_logstream.route.route_out_mbytes': \" . route_out_mbytes . \", 'cribl_logstream.route.route_in_events': \" . route_in_events . \", 'cribl_logstream.route.route_out_events': \" . route_out_events . \"}\"\n\n``` set Outliers metrics, time_factor is set to none but could also be set to include time season concepts ```\n| eval outliers_metrics = \"{'cribl_logstream.route.route_in_events': {'alert_lower_breached': 1, 'alert_upper_breached': 0, 'time_factor': 'none'}, 'cribl_logstream.route.route_out_events': {'alert_lower_breached': 1, 'alert_upper_breached': 0, 'time_factor': 'none'}}\"\n\n``` alert if inactive for more than 3600 sec```\n| eval max_sec_inactive=3600",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707303570.136734
+    },
+    "d9d9b7a298e8fe93bf29bdc9bc6ec8a9": {
+        "transaction_request": {
+            "tenant_id": "cribl-mon",
+            "component": "flx",
+            "tracker_name": "cribl_logstream_total_traffic_inputs",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| mstats sum(cribl.logstream.total.in_bytes) as total_in_bytes, sum(cribl.logstream.total.in_events) as total_in_events where index=* host=* by group, input\n| foreach total_in_bytes, total_in_events [ eval <<FIELD>> = if(isnum('<<FIELD>>'), round('<<FIELD>>', 0), 0) ]\n| rex field=output \"^(?<normalized_output>[^\\:]*\\:[^\\:]*):{0,1}\"\n| eval output=coalesce(normalized_output, output)\n| stats sum(total_in_bytes) as total_in_bytes, sum(total_in_events) as total_in_events by group, input\n| eval total_in_mbytes = round(total_in_bytes/1024/1024, 3)\n\n``` set group, cribl already has a field called group, rename it to allow our own convention ```\n| rename group as cribl_group\n\n``` set group and object ```\n| eval group = \"Cribl_Logstream:traffic_in_total\"\n| eval object = \"input|group:\" . cribl_group . \"|input:\" . input\n| eval object_description = \"Cribl Logstream Total in traffic:\" . input . \", group: \" . cribl_group\n\n``` set a basic status, detection of issues is achieved through ML outliers ```\n| eval status=case(\ntotal_in_events>0, 1,\ntotal_in_events<=0, 2,\n1=1, 3\n)\n\n``` set status_description ```\n| eval status_description = case(\nstatus=1, \"Cribl Total In traffic: \" . input . \" has active traffic, total_in_bytes: \" . total_in_bytes . \", total_in_events: \" . total_in_events,\nstatus=2, \"Cribl Total In traffic: \" . input . \" is not active currently, total_in_bytes: \" . total_in_bytes . \", total_in_events:\" . total_in_events,\nstatus=3, \"Cribl Total In traffic: \" . input . \" is unknown or unexpected\"\n)\n\n``` set metrics ```\n| eval metrics = \"{'cribl_logstream.total.total_in_bytes': \" . total_in_bytes . \", 'cribl_logstream.total.total_in_events': \" . total_in_events . \", 'cribl_logstream.total.total_in_mbytes': \" . total_in_mbytes . \"}\"\n\n``` set Outliers metrics, time_factor is set to none but could also be set to include time season concepts ```\n| eval outliers_metrics = \"{'cribl_logstream.total.total_in_events': {'alert_lower_breached': 1, 'alert_upper_breached': 0, 'time_factor': 'none'}}\"\n\n``` alert if inactive for more than 3600 sec```\n| eval max_sec_inactive=3600",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707303632.5329897
+    },
+    "ca05c048b62d7f0aa6c10d355af6f97a": {
+        "transaction_request": {
+            "tenant_id": "cribl-mon",
+            "component": "flx",
+            "tracker_name": "cribl_logstream_total_traffic_outputs",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| mstats sum(cribl.logstream.total.out_bytes) as total_out_bytes, sum(cribl.logstream.total.out_events) as total_out_events where index=* host=* output!=\"devnull:devnull\" by group, output\n| foreach total_out_bytes, total_out_events [ eval <<FIELD>> = round('<<FIELD>>', 0) ]\n| rex field=output \"^(?<normalized_output>[^\\:]*\\:[^\\:]*):{0,1}\"\n| eval output=coalesce(normalized_output, output)\n| stats sum(total_out_bytes) as total_out_bytes, sum(total_out_events) as total_out_events by group, output\n| eval total_out_mbytes = round(total_out_bytes/1024/1024, 3)\n\n``` set group, cribl already has a field called group, rename it to allow our own convention ```\n| rename group as cribl_group\n\n``` set group and object ```\n| eval group = \"Cribl_Logstream:traffic_out_total\"\n| eval object = \"output|group:\" . cribl_group . \"|output:\" . output\n| eval object_description = \"Cribl Logstream Total out traffic:\" . output . \", group: \" . cribl_group\n\n``` set a basic status, detection of issues is achieved through ML outliers ```\n| eval status=case(\ntotal_out_events>0, 1,\ntotal_out_events<=0, 2,\n1=1, 3\n)\n\n``` set status_description ```\n| eval status_description = case(\nstatus=1, \"Cribl Total Out traffic: \" . output . \" has active traffic, total_out_bytes: \" . total_out_bytes . \", total_out_events: \" . total_out_events,\nstatus=2, \"Cribl Total Out traffic: \" . output . \" is not active currently, total_out_bytes: \" . total_out_bytes . \", total_out_events:\" . total_out_events,\nstatus=3, \"Cribl Total Out traffic: \" . output . \" is unknown or unexpected\"\n)\n\n``` set metrics ```\n| eval metrics = \"{'cribl_logstream.total.total_out_bytes': \" . total_out_bytes . \", 'cribl_logstream.total.total_out_events': \" . total_out_events . \", 'cribl_logstream.total.total_out_mbytes': \" . total_out_mbytes . \"}\"\n\n``` set Outliers metrics, time_factor is set to none but could also be set to include time season concepts ```\n| eval outliers_metrics = \"{'cribl_logstream.total.total_out_events': {'alert_lower_breached': 1, 'alert_upper_breached': 0, 'time_factor': 'none'}}\"\n\n``` alert if inactive for more than 3600 sec```\n| eval max_sec_inactive=3600",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707303680.5922766
+    },
+    "6b312f4904674bac07a8e0b580c18b9b": {
+        "transaction_request": {
+            "tenant_id": "deployment-servers",
+            "component": "flx",
+            "tracker_name": "splk_deployment_server",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| rest splunk_server=local /services/deployment/server/clients\n| fields lastPhoneHomeTime hostname guid clientName averagePhoneHomeInterval dns package ip\n\n``` set group, object, object_description and alias ```\n| eval group=\"infrastructure:deployment_servers\"\n| eval object=\"dsclient:\" . clientName . \"|hostname:\" . hostname\n| eval alias = \"clientname:\" . clientName . \"|hostname:\" . hostname\n| eval object_description = \"DS client: \" . alias . \", type: \" . package\n\n``` calculate last phone home ```\n| eval ds.time_since_phonehome_sec = round(now()-lastPhoneHomeTime, 0)\n\n``` set metrics ```\n| eval metrics = \"{\\\"ds.time_since_phonehome_sec\\\": \" . 'ds.time_since_phonehome_sec' . \"}\"\n\n``` set status and status_description ```\n| eval status = case(\n'ds.time_since_phonehome_sec'<7*86400, 1, 'ds.time_since_phonehome_sec'>=7*86400, 2, 1=1, 3)\n| eval status_description = case( status=1, \"The client has contacted the deployment server in the past 7 days (last connection: \" . strftime(lastPhoneHomeTime, \"%c\") . \")\", status=2, \"The client has has reached the 7 days threshold as it didn't contact the deployment server, (last connection:\" . strftime(lastPhoneHomeTime, \"%c\") . \")\", status=3, \"The client status is unknown\"\n)\n\n| fields group, object, alias, object_description, status, status_description, metrics\n\n``` alert if inactive for more than 7 days, if the host does not phone home anymore and the DS has lost track of it, the inactive tracker will capture this information even if the time since last phone home is not updated anymore ```\n``` to update the max time allowed before raising an alert, update both the status assignement and the max_sec_inactive value ```\n| eval max_sec_inactive=604800",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707380162.8430681
+    },
+    "089b8986edaa60681cf8678591d02a30": {
+        "transaction_request": {
+            "tenant_id": "deployment-servers",
+            "component": "flx",
+            "tracker_name": "my_flx_object_240",
+            "tracker_type": "remote",
+            "account": "demo",
+            "root_constraint": "| rest splunk_server=local /services/deployment/server/clients\n| fields lastPhoneHomeTime hostname guid clientName averagePhoneHomeInterval dns package ip\n\n``` set group, object, object_description and alias ```\n| eval group=\"infrastructure:deployment_servers\"\n| eval object=\"dsclient:\" . clientName . \"|hostname:\" . hostname\n| eval alias = \"clientname:\" . clientName . \"|hostname:\" . hostname\n| eval object_description = \"DS client: \" . alias . \", type: \" . package\n\n``` calculate last phone home ```\n| eval ds.time_since_phonehome_sec = round(now()-lastPhoneHomeTime, 0)\n\n``` set metrics ```\n| eval metrics = \"{\\\"ds.time_since_phonehome_sec\\\": \" . 'ds.time_since_phonehome_sec' . \"}\"\n\n``` set status and status_description ```\n| eval status = case(\n'ds.time_since_phonehome_sec'<7*86400, 1, 'ds.time_since_phonehome_sec'>=7*86400, 2, 1=1, 3)\n| eval status_description = case( status=1, \"The client has contacted the deployment server in the past 7 days (last connection: \" . strftime(lastPhoneHomeTime, \"%c\") . \")\", status=2, \"The client has has reached the 7 days threshold as it didn't contact the deployment server, (last connection:\" . strftime(lastPhoneHomeTime, \"%c\") . \")\", status=3, \"The client status is unknown\"\n)\n\n| fields group, object, alias, object_description, status, status_description, metrics\n\n``` alert if inactive for more than 7 days, if the host does not phone home anymore and the DS has lost track of it, the inactive tracker will capture this information even if the time since last phone home is not updated anymore ```\n``` to update the max time allowed before raising an alert, update both the status assignement and the max_sec_inactive value ```\n| eval max_sec_inactive=604800",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707380225.4154809
+    },
+    "6fcb99d17049a71374e1e426531a1ab1": {
+        "transaction_request": {
+            "tenant_name": "endpoints",
+            "tenant_alias": "13 - Endpoints",
+            "tenant_desc": "Events endpoints tracking",
+            "tenant_roles_admin": "trackme_admin",
+            "tenant_roles_power": "trackme_power",
+            "tenant_roles_user": "trackme_user",
+            "tenant_owner": "admin",
+            "tenant_idx_settings": "global",
+            "tenant_dhm_enabled": "true"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/vtenants/admin/add_tenant",
+        "ctime": 1707385807.9971902
+    },
+    "c3ebeaa6cf0a343c758d390ff6f30e53": {
+        "transaction_request": {
+            "tenant_id": "endpoints",
+            "component": "dhm",
+            "tracker_name": "endpoints",
+            "account": "local",
+            "search_mode": "tstats",
+            "root_constraint": "[ | inputlookup trackme_sites.csv | where site_name=\"eu\" | table root_constraint | return $root_constraint ]",
+            "earliest_time": "-4h",
+            "latest_time": "+4h",
+            "index_earliest_time": "-4h",
+            "index_latest_time": "+4h"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_hybrid_trackers/admin/hybrid_tracker_create",
+        "ctime": 1707385881.204303
+    },
+    "662a1b7017feac2f06162d578f13bf14": {
+        "transaction_request": {
+            "tenant_id": "endpoints",
+            "component": "dhm",
+            "tracker_name": "endpoints",
+            "account": "local",
+            "search_mode": "tstats",
+            "root_constraint": "[ | inputlookup trackme_sites.csv | where site_name=\"na\" | table root_constraint | return $root_constraint ]",
+            "earliest_time": "-4h",
+            "latest_time": "+4h",
+            "index_earliest_time": "-4h",
+            "index_latest_time": "+4h"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_hybrid_trackers/admin/hybrid_tracker_create",
+        "ctime": 1707385890.8624632
+    },
+    "fa7a7f2cc8b1fe2d9fb7cc8d9e062035": {
+        "transaction_request": {
+            "tenant_id": "endpoints",
+            "component": "dhm",
+            "tracker_name": "endpoints",
+            "account": "local",
+            "search_mode": "tstats",
+            "root_constraint": "[ | inputlookup trackme_sites.csv | where site_name=\"uk\" | table root_constraint | return $root_constraint ]",
+            "earliest_time": "-4h",
+            "latest_time": "+4h",
+            "index_earliest_time": "-4h",
+            "index_latest_time": "+4h"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_hybrid_trackers/admin/hybrid_tracker_create",
+        "ctime": 1707385901.8909025
+    },
+    "89010940eb3fd1aba10adec1c09a27c8": {
+        "transaction_request": {
+            "tenant_id": "endpoints",
+            "alert_name": "TrackMe alert tenant_id:endpoints - Alert splk-dhm",
+            "alert_search": "| `get_splk_dhm_table(endpoints, compact, *, *)`\n| where monitored_state=\"enabled\"\n| appendcols [ | inputlookup trackme_maintenance_mode ] | filldown maintenance_mode | where NOT maintenance_mode=\"enabled\"\n| search object=\"*\"\n| search priority=\"*\"\n| where (object_state=\"red\" OR object_state=\"orange\") | search object_state=\"red\"\n| `AnyTime`\n| where ack_state!=\"active\"",
+            "alert_properties": {
+                "description": "TrackMe alert",
+                "alert_type": "number of events",
+                "alert.severity": "5",
+                "alert.suppress": "1",
+                "alert.suppress.fields": "object",
+                "alert.suppress.period": "15m",
+                "alert.track": "1",
+                "dispatch.earliest_time": "-5m",
+                "dispatch.latest_time": "now",
+                "is_scheduled": "1",
+                "schedule_window": "auto",
+                "alert_comparator": "greater than",
+                "alert_threshold": "0",
+                "alert.digest_mode": "0",
+                "cron_schedule": "*/5 * * * *",
+                "actions": "trackme_notable,trackme_auto_ack,trackme_smart_status",
+                "action.trackme_notable.title": "$name$",
+                "action.trackme_smart_status.param.tenant_id": "$result.tenant_id$",
+                "action.trackme_auto_ack.param.object_category": "$result.object_category$",
+                "action.trackme_auto_ack.param.object_name": "$result.object$",
+                "action.trackme_auto_ack.param.ack_period": "86400",
+                "action.trackme_auto_ack.param.ack_type": "unsticky",
+                "action.trackme_smart_status.param.object_category": "$result.object_category$",
+                "action.trackme_smart_status.param.object_name": "$result.object$"
+            }
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/alerting/admin/create_alert",
+        "ctime": 1707388720.8279133
+    },
+    "5c9e17b3b73e8e662d20c715ce130cf5": {
+        "transaction_request": {
+            "tenant_name": "splunk-soar",
+            "tenant_alias": "14 - SOAR",
+            "tenant_desc": "Splunk SOAR Monitoring",
+            "tenant_roles_admin": "trackme_admin",
+            "tenant_roles_power": "trackme_power",
+            "tenant_roles_user": "trackme_user",
+            "tenant_owner": "admin",
+            "tenant_idx_settings": "global",
+            "tenant_flx_enabled": "true"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/vtenants/admin/add_tenant",
+        "ctime": 1707388882.226734
+    },
+    "d5ac7653fc89495e1703fb4071761bd8": {
+        "transaction_request": {
+            "tenant_id": "splunk-soar",
+            "alert_name": "TrackMe alert tenant_id:splunk-soar - Alert splk-flx",
+            "alert_search": "| `get_splk_flx_table(splunk-soar,*,*)`\n| where monitored_state=\"enabled\"\n| appendcols [ | inputlookup trackme_maintenance_mode ] | filldown maintenance_mode | where NOT maintenance_mode=\"enabled\"\n| search object=\"*\"\n| search priority=\"*\"\n| where (object_state=\"red\" OR object_state=\"orange\") | search object_state=\"red\"\n| `AnyTime`\n| where ack_state!=\"active\"",
+            "alert_properties": {
+                "description": "TrackMe alert",
+                "alert_type": "number of events",
+                "alert.severity": "5",
+                "alert.suppress": "1",
+                "alert.suppress.fields": "object",
+                "alert.suppress.period": "15m",
+                "alert.track": "1",
+                "dispatch.earliest_time": "-5m",
+                "dispatch.latest_time": "now",
+                "is_scheduled": "1",
+                "schedule_window": "auto",
+                "alert_comparator": "greater than",
+                "alert_threshold": "0",
+                "alert.digest_mode": "0",
+                "cron_schedule": "*/5 * * * *",
+                "actions": "trackme_notable,trackme_auto_ack,trackme_smart_status",
+                "action.trackme_notable.title": "$name$",
+                "action.trackme_smart_status.param.tenant_id": "$result.tenant_id$",
+                "action.trackme_auto_ack.param.object_category": "$result.object_category$",
+                "action.trackme_auto_ack.param.object_name": "$result.object$",
+                "action.trackme_auto_ack.param.ack_period": "86400",
+                "action.trackme_auto_ack.param.ack_type": "unsticky",
+                "action.trackme_smart_status.param.object_category": "$result.object_category$",
+                "action.trackme_smart_status.param.object_name": "$result.object$"
+            }
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/alerting/admin/create_alert",
+        "ctime": 1707389075.6948066
+    },
+    "b606238eac6293310e96f58d2412d7dd": {
+        "transaction_request": {
+            "tenant_id": "splunk-soar",
+            "component": "flx",
+            "tracker_name": "splk_soar_actions_apprun_failures",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "index=phantom_app_run status=failed | eval time = strftime(_time, \"%c\") | stats dc(_time) as failed_count, latest(status) as soar_status, values(time) as actions_time, values(action) as actions, values(message) as message, values(app_name) as app_names\n| foreach action, message, app_names, actions, actions_time [ eval <<FIELD>> = \"['\" . mvjoin('<<FIELD>>', \"'], ['\") . \"']\" ]\n\n``` set group, object and object description ```\n| eval group = \"Splunk_SOAR:actions_health\"\n| eval object = \"app_run:failed_actions_detection\"\n| eval object_description = \"SOAR actions failure monitoring\"\n\n``` set the status ```\n| eval status=case(\nfailed_count=0, 1,\nfailed_count>=1, 2,\n1=1, 3\n)\n\n``` set the status_description ```\n| eval status_description = case(\nstatus=1, \"no actions failures were detected, last_run:\" . strftime(now(), \"%c\"),\nstatus=2, \"failure detected on \" . failed_count . \" action(s): \" . actions . \" messages: \" . message . \", time: \" . actions_time . \", app_names:\" . app_names . \", status:\" . soar_status,\n1=1, \"failure detection status is unknown\"\n)\n\n``` there no metrics for this UC, default status metric for flx is equivalent ```\n\n``` alert if inactive for more than 2 hours```\n| eval max_sec_inactive=7200",
+            "earliest_time": "-60m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707389497.4788141
+    },
+    "ff45356e5ad1bc4dc8114f0bd2b89f5a": {
+        "transaction_request": {
+            "tenant_id": "splunk-soar",
+            "component": "flx",
+            "tracker_name": "splk_soar_actions_playbooks_failures",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "index=phantom_action_run status=failed | eval time = strftime(_time, \"%c\") | stats dc(_time) as failed_count, latest(status) as soar_status, values(time) as actions_time, values(action) as action, values(message) as message, values(playbook) as playbook_id, values(owner) as owner, values(name) as action_name\n| foreach action, message, playbook_id, owner, action_name, actions_time [ eval <<FIELD>> = \"['\" . mvjoin('<<FIELD>>', \"'], ['\") . \"']\" ]\n\n``` set group, object and object description ```\n| eval group = \"Splunk_SOAR:actions_health\"\n| eval object = \"playbook_run:failed_actions_detection\"\n| eval object_description = \"SOAR actions failure monitoring\"\n\n``` set the status ```\n| eval status=case(\nfailed_count=0, 1,\nfailed_count>=1, 2,\n1=1, 3\n)\n\n``` set the status_description ```\n| eval status_description = case(\nstatus=1, \"no actions failures were detected, last_run:\" . strftime(now(), \"%c\"),\nstatus=2, \"failure detected on \" . failed_count . \" action(s): \" . action . \" messages: \" . message . \", time: \" . actions_time . \", playbook_ids:\" . playbook_id . \", action_names: \" . action_name . \", status:\" . soar_status,\n1=1, \"failure detection status is unknown\"\n)\n\n``` there no metrics for this UC, default status metric for flx is equivalent ```\n\n``` alert if inactive for more than 2 hours```\n| eval max_sec_inactive=7200",
+            "earliest_time": "-60m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707389889.82191
+    },
+    "0487383e8995d082db27dd3337b0f86f": {
+        "transaction_request": {
+            "tenant_id": "splunk-soar",
+            "component": "flx",
+            "tracker_name": "splk_soar_assets_health",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| trackmesplksoar soar_server=* action=soar_test_apps action_data=\"{\\\"active_check\\\": \\\"True\\\", \\\"assets_allow_list\\\": \\\"None\\\", \\\"assets_block_list\\\": \\\"internal_smtp\\\"}\"\n\n``` set group, object and object description ```\n| eval group = \"Splunk_SOAR:asset_health\"\n| eval object = \"asset_type:\" . type . \"|asset:\" . name\n| eval object_description = \"SOAR Asset: \" . name . \", type: \" . type . \", id: \" . id\n\n``` rename the upstream status to avoid any confusion ```\n| rename status as asset_status\n\n``` set the status ```\n| eval status=case(\nasset_status=\"success\", 1,\nasset_status=\"failed\", 2,\n1=1, 3\n)\n\n``` ensure we have a value for message and time ```\n| foreach message, time [ eval <<FIELD>>=if(isnull('<<FIELD>>'), \"No results\", '<<FIELD>>') ]\n\n``` set the status_description ```\n| eval status_description = case(\nstatus=1, \"Asset: \" . name . \" is healthy, result: \" . message . \", check_time: \" . time,\nstatus=2, \"Asset: \" . name . \" is not healthy, result: \" . message . \", check_time: \" . time,\nstatus=3, \"Asset: \" . name . \" is unknown or unexpected, result: \" . message . \", check_time: \" . time\n)\n\n``` there no metrics for this UC, default status metric for flx is equivalent ```\n\n``` alert if inactive for more than 3600 sec```\n| eval max_sec_inactive=3600",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "*/30 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707390774.6117241
+    },
+    "40f998ce57d4558e31e4559653c1180d": {
+        "transaction_request": {
+            "tenant_id": "splunk-soar",
+            "component": "flx",
+            "tracker_name": "splk_soar_automation_brokers_manage",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| trackmesplksoar soar_server=* action=soar_automation_broker_manage action_data=\"{'mode': 'simulation', 'automation_active1_broker_name': 'None', 'automation_active2_broker_name': 'None'}\" | spath\n\n| table *\n| rename \"associated_assets{}\" as associated_assets\n\n``` set group, object and object description ```\n| eval group = \"Splunk_SOAR:automation_broker_manage\"\n| eval object = \"broker:\" . name\n| eval object_description = \"SOAR Automation Broker: \" . name . \", version: \" . version\n\n| foreach rest_healthcheck_time_epoch ws_healthcheck_time_epoch [ eval <<FIELD>> = strptime('<<FIELD>>', \"%Y-%m-%dT%H:%M:%S.%6NZ\") ]\n| eval time_since_rest_healthcheck=now()-rest_healthcheck_time_epoch, time_since_ws_healthcheck=now()-ws_healthcheck_time_epoch\n\n``` set the status against the SOAR known status of the AB```\n| eval status=case(last_seen_status=\"active\", 1, last_seen_status=\"inactive\", 2, 1=1, 3)\n\n``` set the status_description ```\n| eval status_description = case(\nstatus=1, \"automation broker: \" . name . \" is healthy, result: \" . last_seen_status . \", rest_healthcheck_time: \" . rest_healthcheck_time . \", ws_healthcheck_time:\" . ws_healthcheck_time . \", Assets count: \" . associated_assets_count . \", Assets: \" . if(isnotnull(associated_assets), mvjoin(associated_assets, \", \"), \"None\"),\nstatus=2, \"automation broker: \" . name . \" is not healthy, result: \" . last_seen_status . \", check_time: \" . strftime(now(), \"%c\") . \", Assets count: \" . associated_assets_count . \", Assets: \" . if(isnotnull(associated_assets), mvjoin(associated_assets, \", \"), \"None\"),\nstatus=3, \"automation broker: \" . name . \" status is unknown or unexpected, status: \" . message . \", check_time: \" . strftime(now(), \"%c\"))\n\n``` there no metrics for this UC, default status metric for flx is equivalent ```\n\n``` alert if inactive for more than 3600 sec```\n| eval max_sec_inactive=3600\n\n| table status status_description *",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707392374.6553354
+    },
+    "be5f7dd63dcbaa2231e991f084e3eec4": {
+        "transaction_request": {
+            "tenant_id": "splunk-soar",
+            "component": "flx",
+            "tracker_name": "splk_soar_infra_load",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| trackmesplksoar soar_server=* action=soar_health_load\n| table load_15min, load_5min, load_1min\n\n``` set group, object and object description ```\n| eval group = \"Splunk_SOAR:infrastructure\"\n| eval object = \"cpu_load\"\n| eval object_description = \"SOAR infrastructure: CPU load\"\n\n``` if you wish to set thresholds, you can do so in the following eval statement, the load is depending on the number of cores which is not provided by the REST endpoints ```\n``` example: eval status=case(load_15min>=4, 2, load_15min<4, 1, 1=1, 3) ```\n``` You would also need to update the status_description logic to include the meaning of your custom status ```\n\n``` As we cannot guess the meaning of load in term of percentage of usage, we simply collect and rely on ML Outliers ```\n| eval status=case(\nload_15min>0, 1,\n1=1, 3\n)\n\n| eval status_description = case(\nstatus=1, \"CPU Load usage 15 min: \" . load_15min . \", 5 min: \" . load_5min . \", 1 min: \" . load_1min,\nstatus=3, \"CPU Load usage is unknown\"\n)\n\n``` set and collect metrics ```\n| eval metrics = \"{\\\"soar.load_15min\\\": \" . load_15min . \", \\\"soar.load_5min\\\": \" . load_5min . \", \\\"soar.load_1min\\\": \" . load_1min . \"}\"\n\n``` set outliers metrics ```\n| eval outliers_metrics = \"{\\\"soar.load_15min\\\": {\\\"alert_lower_breached\\\": 0, \\\"alert_upper_breached\\\": 1}}\"\n\n``` alert if inactive for more than 3600 sec```\n| eval max_sec_inactive=3600",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707392760.3092139
+    },
+    "adff19025a50b60b208703ad21743496": {
+        "transaction_request": {
+            "tenant_id": "splunk-soar",
+            "component": "flx",
+            "tracker_name": "splk_soar_infra_memory",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| trackmesplksoar soar_server=* action=soar_health_memory\n| table mem_cached, mem_cached_pct, mem_free, mem_used, mem_used_pct\n\n``` set group, object and object description ```\n| eval group = \"Splunk_SOAR:infrastructure\"\n| eval object = \"memory_usage\"\n| eval object_description = \"SOAR infrastructure: Memory usage\"\n\n| eval status=case(\nmem_used_pct<85, 1,\nmem_used_pct>=85, 2,\n1=1, 3\n)\n\n| eval status_description = case(\nstatus=1, \"Avg Memory pct usage: \" . mem_used_pct . \"% is bellow 85%\",\nstatus=2, \"Avg Memory pct usage: \" . mem_used_pct . \"% is high and superior to 85%\",\nstatus=3, \"Memory pct usage is unknown or not expected\"\n)\n\n| eval metrics = \"{\\\"cribl_logstream.avg_cpu_perc\\\": \" . avg_cpu_perc . \"}\"\n\n``` set and collect metrics ```\n| eval metrics = \"{\\\"soar.mem_used_pct\\\": \" . mem_used_pct . \", \\\"soar.mem_cached\\\": \" . mem_cached . \", \\\"soar.mem_cached_pct\\\": \" . mem_cached_pct . \", \\\"soar.mem_free\\\": \" . mem_free . \", \\\"soar.mem_used\\\": \" . mem_used . \"}\"\n\n``` set outliers metrics ```\n| eval outliers_metrics = \"{\\\"soar.mem_used_pct\\\": {\\\"alert_lower_breached\\\": 0, \\\"alert_upper_breached\\\": 1}}\"\n\n``` alert if inactive for more than 3600 sec```\n| eval max_sec_inactive=3600",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707393566.8117404
+    },
+    "03c573b513ab52550afd297300e79344": {
+        "transaction_request": {
+            "tenant_id": "splunk-soar",
+            "component": "flx",
+            "tracker_name": "splk_soar_services_health",
+            "tracker_type": "local",
+            "account": "local",
+            "root_constraint": "| trackmesplksoar soar_server=* action=soar_health_status\n\n``` set group, object and object description ```\n| eval group = \"Splunk_SOAR:services_health\"\n| eval object = \"service:\" . service\n| eval object_description = \"SOAR service: \" . service\n\n``` set the status ```\n| eval status=case(\nstatus=\"running\", 1,\nstatus!=\"running\", 2,\n1=1, 3\n)\n\n``` set the status_description ```\n| eval status_description = case(\nstatus=1, \"service: \" . service . \" is healthy, result: \" . status . \", check_time: \" . strftime(now(), \"%c\"),\nstatus=2, \"service: \" . service . \" is not healthy, result: \" . status . \", check_time: \" . strftime(now(), \"%c\"),\nstatus=3, \"service: \" . service . \" is unknown or unexpected, status: \" . message . \", check_time: \" . strftime(now(), \"%c\")\n)\n\n``` there no metrics for this UC, default status metric for flx is equivalent ```\n\n``` alert if inactive for more than 3600 sec```\n| eval max_sec_inactive=3600",
+            "earliest_time": "-5m",
+            "latest_time": "now",
+            "cron_schedule": "*/5 * * * *",
+            "update_comment": "No comment for update.",
+            "owner": "admin"
+        },
+        "transaction_http_mode": "post",
+        "transaction_http_service": "/services/trackme/v2/splk_flx/admin/flx_tracker_create",
+        "ctime": 1707394712.501461
+    }
+}
