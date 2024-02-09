@@ -209,23 +209,6 @@ def gen_app():
     # Set app_root
     app_root = os.path.join(output_dir, appID)
 
-    # Verify that there are no *.pyc file in app_root, and purge otherwise
-    purged_files = glob.glob(os.path.join(app_root, "**/*.pyc"), recursive=True)
-    for file_name in purged_files:
-        logging.debug('Attempting to remove pyc file="{}"'.format(file_name))
-        if os.path.isfile(file_name):
-            try:
-                os.remove(file_name)
-                logging.debug(
-                    'pyc file="{}" was deleted successfully'.format(file_name)
-                )
-            except Exception as e:
-                logging.error(
-                    'pyc file="{}" could not be deleted, exception="{}"'.format(
-                        file_name, e
-                    )
-                )
-
     # Remove current app if it exists
     if os.path.isdir(app_root):
         logging.debug(
@@ -276,6 +259,23 @@ def gen_app():
         build_number_file = "build.txt"
         with open(build_number_file, "w") as f:
             f.write(build_number + "\n")
+
+        # Verify that there are no *.pyc file in app_root, and purge otherwise
+        purged_files = glob.glob(os.path.join(app_root, "**/*.pyc"), recursive=True)
+        for file_name in purged_files:
+            logging.debug('Attempting to remove pyc file="{}"'.format(file_name))
+            if os.path.isfile(file_name):
+                try:
+                    os.remove(file_name)
+                    logging.debug(
+                        'pyc file="{}" was deleted successfully'.format(file_name)
+                    )
+                except Exception as e:
+                    logging.error(
+                        'pyc file="{}" could not be deleted, exception="{}"'.format(
+                            file_name, e
+                        )
+                    )
 
         # gen tar
         tar_file = (
