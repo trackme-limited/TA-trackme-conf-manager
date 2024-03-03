@@ -63,7 +63,15 @@ jobs:
           name: appinspect-report-json
           path: output/report_appinspect.json
 
+      - name: Archive tgz Archive
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-tgz
+          path: output/*.tgz
+
       - name: Show output directory content
+        if: always()
         run: |
           ls -ltr output/
 
