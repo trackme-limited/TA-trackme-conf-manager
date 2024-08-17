@@ -1,1 +1,2 @@
-splunk-add-on-ucc-framework>=5.19.0
+splunk-add-on-ucc-framework>=5.35.0
+addonfactory-splunk-conf-parser-lib==0.4.0

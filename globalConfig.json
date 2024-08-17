@@ -30,42 +30,8 @@
                     "title": "General configuration"
                 },
                 {
-                    "name": "logging",
-                    "entity": [
-                        {
-                            "type": "singleSelect",
-                            "label": "Log level",
-                            "help": "The logging level applies to all custom commands and the TrackMe REST API, logs are indexed automatically within the _internal index",
-                            "options": {
-                                "disableSearch": true,
-                                "autoCompleteFields": [
-                                    {
-                                        "value": "DEBUG",
-                                        "label": "DEBUG"
-                                    },
-                                    {
-                                        "value": "INFO",
-                                        "label": "INFO"
-                                    },
-                                    {
-                                        "value": "WARNING",
-                                        "label": "WARNING"
-                                    },
-                                    {
-                                        "value": "ERROR",
-                                        "label": "ERROR"
-                                    },
-                                    {
-                                        "value": "CRITICAL",
-                                        "label": "CRITICAL"
-                                    }
-                                ]
-                            },
-                            "defaultValue": "INFO",
-                            "field": "loglevel"
-                        }
-                    ],
-                    "title": "Logging"
+                    "type": "loggingTab",
+                    "help": "The logging level applies to all custom commands and the TrackMe REST API, logs are indexed automatically within the _internal index"
                 }
             ],
             "title": "Configuration",
@@ -75,9 +41,9 @@
     "meta": {
         "name": "TA-trackme-conf-manager",
         "restRoot": "ta_trackme_conf_manager",
-        "version": "1.0.3",
+        "version": "1.0.4",
         "displayName": "TrackMe Configuration Manager",
-        "schemaVersion": "0.0.3",
-        "_uccVersion": "5.39.1"
+        "schemaVersion": "0.0.8",
+        "_uccVersion": "5.48.2"
     }
 }
