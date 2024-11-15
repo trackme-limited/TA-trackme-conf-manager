@@ -1,2 +1,1 @@
-splunktaucclib>=5.0.4
-urllib3==1.*
+splunktaucclib>=6.5.0
